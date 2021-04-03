@@ -15,6 +15,7 @@ import com.soywiz.korge.ui.uiCheckBox
 import com.soywiz.korge.ui.uiTextButton
 import com.soywiz.korge.view.*
 import com.soywiz.korgw.GameWindow
+import com.soywiz.korim.bitmap.Bitmap
 import com.soywiz.korim.bitmap.effect.BitmapEffect
 import com.soywiz.korim.color.*
 import com.soywiz.korim.color.Colors.BLACK
@@ -54,13 +55,33 @@ object ConfigModule : Module() {
 
 class Scene1() : Scene() {
     override suspend fun Container.sceneInit() {
-        val circle = circle(100.0, Colors.BLUE).xy(300, 100)
+        val circle = circle(100.0, Colors.WHITE).xy(156, 500)
+
         circle.onClick {
             sceneContainer.changeTo<Scene2>()
         }
 
-        val rect = roundRect(100.0, 30.0, 5.0, 5.0, Colors.BLACK, Colors.WHITE, 4.0, true).xy(100, 100)
+        val rect = roundRect(300.0, 50.0, 5.0, 5.0, Colors.BLACK, Colors.WHITE, 4.0, true).xy(106, 900)
+
+        val font = BitmapFont(
+                DefaultTtfFont, 128.0,
+                paint = WHITE,
+        )
+
+        var offset = 0.degrees
+        addFixedUpdater(60.timesPerSecond) { offset += 10.degrees }
+        var version = 0
+        text("1BIT JAM", font = font, textSize = 128.0, alignment = TextAlignment.BASELINE_LEFT, renderer = CreateStringTextRenderer({ version++ }) { text, n, c, c1, g, advance ->
+            transform.identity()
+            val sin = sin(offset + (n * 360 / text.length).degrees)
+            transform.translate(0.0, sin * 8)
+            transform.scale(1.0, 1.0 + sin * 0.1)
+            put(c)
+            advance(advance)
+        }).position(12, 300)
     }
+
+
 }
 
 class Scene2() : Scene() {
@@ -78,6 +99,10 @@ class Scene2() : Scene() {
         // making ground objects
         // size = 512 x 1028
         var groundObjects: MutableList<ShapeView> = createGroundObjects(this)
+
+        val wallLeft = roundRect(50.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(-40, 0)
+        val wallRight = roundRect(50.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(502, 0)
+        val menubar = roundRect(1000.0, 200.0, 0.0, 0.0, Colors["#000000"], Colors["#000000"], 0.0, true).xy(0, 949)
 
         val circle = circle(25.0, Colors.WHITE).xy(256, 700)
         circle.onClick {
@@ -158,30 +183,24 @@ class Scene2() : Scene() {
 
                 )
 
-        //text("Left", font = font, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT, ).position(160, 1030)
-        //text("Right", font = font2, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT, ).position(310, 1030)
-
-        // text("Right", font = font2, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT, ).position(310, 1030)
-
-
-        /*  uiTextButton(256.0, 32.0) {
-              text = "Right Button"
-              textColor = Colors.GREEN
-              position(256, 128)
-              onClick {
-                  println("Right")
-              }
-              disable()
-          }
-
-         */
     }
 
-    private fun createGroundObjects(container: Container): MutableList<ShapeView> {
+
+
+    private suspend fun createGroundObjects(container: Container): MutableList<ShapeView> {
+        val bitmap : Bitmap = resourcesVfs["chest_white.png"].readBitmap()
         val baseground = container.roundRect(1000.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(0, 900)
         val ground1 = container.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(0, 750)
-        val ground2 = container.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 200, 600)
-        return mutableListOf(baseground, ground1, ground2)
+        val ground2 = container.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -200, 600)
+        val ground3 = container.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -400, 500)
+        val ground4 = container.roundRect(250.0, 50.0, 0.0, 0.0, Colors.VIOLET).xy(512 -250, 250)
+        val image = container.image(bitmap).scale(0.5).position(112,650)
+        val ground5 = container.roundRect(100.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 - 512, 400)
+        val ground6 = container.roundRect(150.0, 50.0, 0.0, 0.0, Colors.RED).xy(512 -512, 150)
+        val ground7 = container.roundRect(80.0, 50.0, 0.0, 0.0, Colors.BLUE).xy(512 - 280, 50)
+        val ground8 = container.roundRect(200.0, 50.0, 0.0, 0.0, Colors.YELLOW).xy(512 -512, -100)
+
+        return mutableListOf(baseground, ground1, ground2,ground3,ground4,ground5, ground6, ground7, ground8,)
     }
 
 
