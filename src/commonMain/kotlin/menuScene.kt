@@ -13,13 +13,13 @@ import com.soywiz.korma.geom.sin
 
 class Scene1() : Scene() {
     override suspend fun Container.sceneInit() {
-        val circle = circle(100.0, Colors.WHITE).xy(156, 500)
+        val circle = circle(100.0, Colors.WHITE).xy(156, 600)
 
         circle.onClick {
             sceneContainer.changeTo<Scene2>()
         }
 
-        roundRect(300.0, 50.0, 5.0, 5.0, Colors.BLACK, Colors.WHITE, 4.0, true).xy(106, 900)
+        roundRect(300.0, 50.0, 5.0, 5.0, Colors.BLACK, Colors.WHITE, 4.0, true).xy(106, 800)
 
         val font = BitmapFont(
                 DefaultTtfFont, 128.0,
@@ -37,5 +37,7 @@ class Scene1() : Scene() {
             put(c)
             advance(advance)
         }).position(12, 300)
+
+        text("TEST", font = font, textSize = 128.0, alignment = TextAlignment.BASELINE_LEFT).position(300,300)
     }
 }

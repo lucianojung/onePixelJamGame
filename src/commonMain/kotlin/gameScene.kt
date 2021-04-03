@@ -132,29 +132,47 @@ class Scene2() : Scene() {
         val ground4 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -250, 300)
         val ground5 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, 400)
         val ground6 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -250, 50)
-        val ground7 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 450, 150)
+        val ground7 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, 150)
         val ground8 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -400, -100)
-        val ground9 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -250)
-        val ground10 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -350, -350)
-        val ground11 = mainContainer.roundRect(80.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 80, -500)
-        val ground12 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.YELLOW).xy(512 -512, -650)
-        val ground13 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.RED).xy(512 - 50, -850)
-        val ground14 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.BLUE).xy(512 - 50, -850)
-        val ground15 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.VIOLET).xy(512 - 50, -850)
-        val ground16 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 - 50, -850)
-        val ground17 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.DARKCYAN).xy(512 - 50, -850)
-        val ground18 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.GOLDENROD).xy(512 - 50, -850)
-        val ground19 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.DARKGREEN).xy(512 - 50, -850)
-        val ground20 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.DARKMAGENTA).xy(512 - 50, -850)
+        val ground82 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 -150, 100)
+        val ground9 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -250)
 
-        return mutableListOf(baseground, ground1, ground2,ground3,ground4,ground5, ground6, ground7, ground8,ground9,ground10,ground11,ground12,ground13)
+        val ground102 = mainContainer.roundRect(225.0, 50.0, 0.0, 0.0, Colors.RED).xy(512 -512, -400)
+        val ground11 = mainContainer.roundRect(80.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 80, -500)
+
+        val ground17 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 150, -200)
+        val ground12 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.ORANGE).xy(512 -300, -600)
+        val ground13 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 150, -800)
+        val ground10 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -512, -750)
+        val ground14 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.BLUE).xy(512 - 512, -850)
+
+        val ground19 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -250, -1000)
+        val ground20 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -1150)
+
+        val ground18 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -1400)
+        val ground23 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 100, -1250)
+        val ground24 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -400, -1350)
+        val ground25 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.GOLDENROD).xy(512 - 50, -1500)
+        val ground26 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.DARKGREEN).xy(512 - 50, -1600)
+        val ground27 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.DARKMAGENTA).xy(512 - 50, -1750)
+        val ground28 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.GOLDENROD).xy(512 - 50, -1850)
+        val ground29 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.DARKGREEN).xy(512 - 50, -2000)
+        val ground15 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.VIOLET).xy(512 - 512, -2100)
+        val ground16 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 - 100, -2200)
+        val ground21 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 -150, -2500)
+
+
+
+        return mutableListOf(baseground, ground1, ground2,ground3,ground4,ground5, ground6, ground7, ground8,ground82,ground9,ground10,ground102,ground11,ground12,ground13,ground14,ground15,ground16,ground17,ground18,ground19,ground20,ground21,ground23,ground24,ground25,ground26,ground27,ground28,ground29)
     }
 
     private suspend fun createTreasureObjects(): MutableList<Image> {
         val bitmap: Bitmap = resourcesVfs["chest_white.png"].readBitmap()
-        val image1 = mainContainer.image(bitmap).scale(0.5).position(112, 650)
+        val image1 = mainContainer.image(bitmap).scale(0.4).position(52, 705)
+        val image2 = mainContainer.image(bitmap).scale(0.4).position(450, 55)
+        val image3 = mainContainer.image(bitmap).scale(0.4).position(5, -795)
 
-        return mutableListOf(image1)
+        return mutableListOf(image1,image2,image3)
     }
 
     private fun updateShapePositions() {
