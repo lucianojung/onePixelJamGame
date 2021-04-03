@@ -1,19 +1,17 @@
 import com.soywiz.klock.Frequency
-import com.soywiz.klock.timesPerSecond
+import com.soywiz.klock.milliseconds
 import com.soywiz.korge.input.onClick
 import com.soywiz.korge.scene.Scene
+import com.soywiz.korge.scene.delay
 import com.soywiz.korge.view.*
 import com.soywiz.korim.bitmap.Bitmap
 import com.soywiz.korim.color.Colors
 import com.soywiz.korim.font.BitmapFont
 import com.soywiz.korim.font.DefaultTtfFont
 import com.soywiz.korim.format.readBitmap
-import com.soywiz.korim.text.CreateStringTextRenderer
 import com.soywiz.korim.text.TextAlignment
 import com.soywiz.korio.file.std.resourcesVfs
-import com.soywiz.korma.geom.degrees
-import com.soywiz.korma.geom.plus
-import com.soywiz.korma.geom.sin
+import com.soywiz.korio.lang.Thread_sleep
 import kotlin.math.min
 import kotlin.random.Random
 
@@ -23,7 +21,10 @@ class Scene2() : Scene() {
     private var moveIntensity = 2.0
     private var maxSpeed = 8.0
     private var gravity = 0.05
+
     private var pixeldepth = 0.0
+    private var powerUpTime = 300
+    private var powerUpActive: Boolean = false
 
     private var leftWalk = false
     private var playerIsAlive = false
@@ -32,6 +33,7 @@ class Scene2() : Scene() {
     private var player: Circle = Circle()
     private var groundObjects: MutableList<ShapeView> = mutableListOf()
     private var treasureObjects: MutableList<Image> = mutableListOf()
+    private var infotext: Text = Text("")
 
 
     override suspend fun Container.sceneInit() {
@@ -45,8 +47,8 @@ class Scene2() : Scene() {
         initPlayer()
 
         //walls and player control area
-        roundRect(50.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(-40, 0)
-        roundRect(50.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(502, 0)
+        roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(0, 0)
+        roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(502, 0)
 
         roundRect(1000.0, 200.0, 0.0, 0.0, Colors["#000000"], Colors["#000000"], 0.0, true).xy(0, 949)
         val buttonLeft = roundRect(150.0, 50.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#000000"], 4.0, true).xy(256, 1000)
@@ -61,6 +63,12 @@ class Scene2() : Scene() {
             changeButtonColor(leftWalk, buttonRight, buttonLeft)
             leftWalk = !leftWalk
         }
+
+        infotext = mainContainer.text("", font = BitmapFont(
+                DefaultTtfFont, 32.0,
+                paint = Colors.WHITE,
+        ), textSize = 32.0, alignment = TextAlignment.CENTER)
+        infotext.position(256, 0)
     }
 
     private fun initPlayer() {
@@ -77,7 +85,7 @@ class Scene2() : Scene() {
             vertical -= gravity
 
             //bounce on border collission
-            if (player.x < 0.0 || player.x > 512 - player.radius * 2) {
+            if (player.x < 10.0 || player.x > 502 - player.radius * 2) {
                 horizontal -= horizontal * 2
             }
 
@@ -89,6 +97,16 @@ class Scene2() : Scene() {
             //check for powerup collection
             if (collidingPowerUps()) {
                 activateRandomPowerUp()
+            }
+
+            //PowerUp Handling
+            if (powerUpActive){
+                powerUpTime--
+            }
+            if (powerUpTime <= 0) {
+                infotext.setText("")
+                powerUpActive = false
+                deleteAllPowerUps()
             }
 
             // clamp max Ball Speed in all Vertical Direction
@@ -105,39 +123,66 @@ class Scene2() : Scene() {
 
             if (player.y > 950 && playerIsAlive) {
                 playerIsAlive = false
-                mainContainer.solidRect(512.0, 1080.0, Colors["#000000"]).xy(0, 0)
-                mainContainer.text("Restart Game", textSize = 32.0, alignment = TextAlignment.BASELINE_LEFT).position(156, 500)
-                val restartButton = mainContainer.roundRect(400.0, 100.0, 5.0, 5.0, Colors.TRANSPARENT_BLACK, Colors.WHITE, 4.0, true).xy(106, 450)
-
-                restartButton.onClick {
-                    playerIsAlive = true
-                    sceneContainer.changeTo<Scene2>()
-                }
-
-                val font = BitmapFont(
-                        DefaultTtfFont, 64.0,
-                        paint = Colors.WHITE,
-                )
-                mainContainer.text("Game Over!", font = font, textSize = 64.0, alignment = TextAlignment.BASELINE_LEFT).position(12, 300)
+                handleGameOver()
             }
-
         }
+    }
+
+    private fun handleGameOver() {
+        mainContainer.solidRect(512.0, 1080.0, Colors["#000000"]).xy(0, 0)
+        mainContainer.text("Restart Game", textSize = 32.0, alignment = TextAlignment.BASELINE_LEFT).position(156, 500)
+        val restartButton = mainContainer.roundRect(400.0, 100.0, 5.0, 5.0, Colors.TRANSPARENT_BLACK, Colors.WHITE, 4.0, true).xy(106, 450)
+
+        restartButton.onClick {
+            playerIsAlive = true
+            sceneContainer.changeTo<Scene2>()
+        }
+
+        val font = BitmapFont(
+                DefaultTtfFont, 64.0,
+                paint = Colors.WHITE,
+        )
+        mainContainer.text("Game Over!", font = font, textSize = 64.0, alignment = TextAlignment.BASELINE_LEFT).position(12, 300)
     }
 
     private fun activateRandomPowerUp() {
         val powerUpNumber = (Random.nextDouble() * 6).toInt()
         when (powerUpNumber) {
-            1 -> gravity -= 0.005
-            2 -> gravity += 0.02
-            3 -> moveIntensity += 0.5
-            4 -> moveIntensity -= 0.5
-            5 -> jumpIntensity -= 0.5
+            1 -> {
+                infotext.setText("Gravity decreased")
+                gravity -= 0.005
+            }
+            2 -> {
+                infotext.setText("Gravity increased")
+                gravity += 0.02
+            }
+            3 -> {
+                infotext.setText("Sideway move speed increased")
+                moveIntensity += 0.5
+            }
+            4 -> {
+                infotext.setText("Sideway move speed decreased")
+                moveIntensity -= 0.5
+            }
+            5 -> {
+                infotext.setText("Jumping Intensity decreased")
+                jumpIntensity -= 0.5
+            }
             else -> {
+                infotext.setText("Jumping Intensity increased")
                 jumpIntensity += 0.5
             }
         }
+        powerUpActive = true
+        powerUpTime = 300
     }
 
+    private fun deleteAllPowerUps() {
+        jumpIntensity = 4.0
+        moveIntensity = 2.0
+        maxSpeed = 8.0
+        gravity = 0.05
+    }
 
     private fun changeButtonColor(bool: Boolean, rect: RoundRect, rect2: RoundRect) {
         if (bool) {
@@ -156,9 +201,9 @@ class Scene2() : Scene() {
     private fun createGroundObjects(): MutableList<ShapeView> {
         val baseground = mainContainer.roundRect(1000.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(0, 900)
         val ground1 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(0, 750)
-        val ground2 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -200, 650)
-        val ground3 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -350, 500)
-        val ground4 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -250, 300)
+        val ground2 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 200, 650)
+        val ground3 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 350, 500)
+        val ground4 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 250, 300)
         val ground5 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, 400)
         val ground6 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -250, 50)
         val ground7 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, 150)
@@ -208,10 +253,10 @@ class Scene2() : Scene() {
         if (player.y < 540) {
             val difference = player.y - 540.0
             player.y -= difference
-            groundObjects.forEach {shape ->
+            groundObjects.forEach { shape ->
                 shape.y -= difference
             }
-            treasureObjects.forEach {shape ->
+            treasureObjects.forEach { shape ->
                 shape.y -= difference
             }
             pixeldepth += difference
