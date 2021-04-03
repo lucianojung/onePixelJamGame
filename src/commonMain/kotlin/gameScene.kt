@@ -71,12 +71,12 @@ class Scene2() : Scene() {
             }
 
             //check Collission
-            val collission = collidingGround(this, groundObjects)
+            val collission = collidingGround()
             if (collission != 0) {
                 vertical = collission * jumpIntensity
             }
             //check for powerup collection
-            if (collidingPowerUps(this, treasureObjects)) {
+            if (collidingPowerUps()) {
                 activateRandomPowerUp()
             }
 
@@ -90,7 +90,7 @@ class Scene2() : Scene() {
                 player.xy(player.x + horizontal, player.y - vertical)
             }
 
-            updateShapePositions(this, groundObjects)
+            updateShapePositions()
 
             if (y > 1080) {
                 //handle Death
@@ -161,17 +161,19 @@ class Scene2() : Scene() {
         return mutableListOf(image1)
     }
 
-    private fun updateShapePositions(circle: Circle, groundObjects: MutableList<ShapeView>) {
-        if (circle.y < 540) {
-            val difference = circle.y - 540.0
-            circle.y -= difference
-            groundObjects.forEach { shape ->
+    private fun updateShapePositions() {
+        if (player.y < 540) {
+            val difference = player.y - 540.0
+            player.y -= difference
+            groundObjects.forEach {
+            }
+            treasureObjects.forEach {shape ->
                 shape.y -= difference
             }
         }
     }
 
-    private fun collidingPowerUps(player: ShapeView, groundObjects: MutableList<Image>): Boolean {
+    private fun collidingPowerUps(): Boolean {
         groundObjects.forEach { shape ->
             if (player.collidesWith(shape)) {
                 shape.removeFromParent()
@@ -181,7 +183,7 @@ class Scene2() : Scene() {
         return false
     }
 
-    private fun collidingGround(player: ShapeView, groundObjects: MutableList<ShapeView>): Int {
+    private fun collidingGround(): Int {
         groundObjects.forEach { shape ->
             if (player.collidesWith(shape)) {
                 if (player.y < shape.y)
