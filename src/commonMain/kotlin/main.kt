@@ -1,5 +1,6 @@
 import com.soywiz.klock.*
 import com.soywiz.klogger.AnsiEscape
+import com.soywiz.korev.addEventListener
 import com.soywiz.korge.*
 import com.soywiz.korge.input.onClick
 import com.soywiz.korge.scene.Module
@@ -50,28 +51,56 @@ class Scene1() : Scene() {
         circle.onClick {
             sceneContainer.changeTo<Scene2>()
         }
+
+        val rect = roundRect(100.0, 30.0, 5.0, 5.0, Colors.BLACK, Colors.WHITE, 4.0, true).xy(100, 100)
     }
 }
 
 class Scene2() : Scene() {
     override suspend fun Container.sceneInit() {
 
-        var bool = true
+        val jumpIntensity = 1.0
+        val moveIntensity = 1
 
-        val circle  = circle(25.0, Colors.WHITE).xy(256, 900)
+        var leftWalk = false
+        var horizontal = 1 * moveIntensity
+        var vertical = 0.0
+        var groundObjects: MutableList<ShapeView> = mutableListOf()
+
+        val baseground = roundRect(1000.0, 50.0, 0.0, 0.0, Colors.WHITE, Colors.BLACK, 4.0, true).xy(0, 900)
+
+
+        groundObjects.addAll(mutableListOf(baseground))
+
+        val circle = circle(25.0, Colors.WHITE).xy(256, 700)
         circle.onClick {
-                circle.color = Colors.RED
-
+            circle.color = Colors.RED
         }
+        circle.addUpdater {
+            vertical -= 0.005
+            if (circle.x < 0.0 || circle.x > 512 - circle.radius*2) {
+                horizontal -= horizontal *2
+            }
+            if (leftWalk) {
+                circle.xy(circle.x - horizontal, circle.y - vertical)
+            } else {
+                circle.xy(circle.x + horizontal, circle.y - vertical)
+            }
+
+            if (colliding(this, groundObjects)) {
+                vertical = 1 * jumpIntensity
+            }
+        }
+
         val rect = roundRect(150.0, 50.0, 0.0, 0.0, Colors.BLACK, Colors.WHITE, 4.0, true).xy(106, 1000)
         rect.onClick {
+            leftWalk = !leftWalk
         }
 
         val rect2 = roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE, Colors.BLACK, 4.0, true).xy(256, 1000)
-        rect.onClick {
-
+        rect2.onClick {
+            leftWalk = !leftWalk
         }
-
 
         val font = BitmapFont(
                 DefaultTtfFont, 24.0,
@@ -84,24 +113,30 @@ class Scene2() : Scene() {
 
                 )
 
-        text("Left", font = font, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT, ).position(160, 1030)
+        // text("Left", font = font, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT, ).position(160, 1030)
 
-        text("Right", font = font2, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT, ).position(310, 1030)
-
-
+        // text("Right", font = font2, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT, ).position(310, 1030)
 
 
+        /*  uiTextButton(256.0, 32.0) {
+              text = "Right Button"
+              textColor = Colors.GREEN
+              position(256, 128)
+              onClick {
+                  println("Right")
+              }
+              disable()
+          }
 
-      /*  uiTextButton(256.0, 32.0) {
-            text = "Right Button"
-            textColor = Colors.GREEN
-            position(256, 128)
-            onClick {
-                println("Right")
+         */
+    }
+
+    private fun colliding(circle: ShapeView, groundObjects: MutableList<ShapeView>): Boolean {
+        groundObjects.forEach {shape ->
+            if (circle.collidesWith(shape)) {
+                return true
             }
-            disable()
         }
-
-       */
+        return false
     }
 }
