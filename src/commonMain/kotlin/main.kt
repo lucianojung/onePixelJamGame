@@ -17,6 +17,12 @@ import com.soywiz.korge.view.*
 import com.soywiz.korgw.GameWindow
 import com.soywiz.korim.bitmap.effect.BitmapEffect
 import com.soywiz.korim.color.*
+import com.soywiz.korim.color.Colors.BLACK
+import com.soywiz.korim.color.Colors.BLUE
+import com.soywiz.korim.color.Colors.GREEN
+import com.soywiz.korim.color.Colors.RED
+import com.soywiz.korim.color.Colors.WHITE
+import com.soywiz.korim.color.Colors.YELLOW
 import com.soywiz.korim.font.BitmapFont
 import com.soywiz.korim.font.DefaultTtfFont
 import com.soywiz.korim.font.readBitmapFont
@@ -110,13 +116,34 @@ class Scene2() : Scene() {
 
         }
 
-        val rect = roundRect(150.0, 50.0, 0.0, 0.0, Colors.BLACK, Colors.WHITE, 4.0, true).xy(106, 1000)
+        var bool = true
+        val rect = roundRect(150.0, 50.0, 0.0, 0.0, Colors["#000000"] , Colors["#FFFFFF"], 4.0, true).xy(106, 1000)
         rect.onClick {
             leftWalk = !leftWalk
+            if(bool) {
+                rect.fill = Colors["#FFFFFF"]
+                rect.stroke = Colors["#000000"]
+            }
+            else {
+                rect.fill = Colors["#000000"]
+                rect.stroke = Colors["#FFFFFF"]
+            }
+            bool =! bool
         }
 
-        val rect2 = roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE, Colors.BLACK, 4.0, true).xy(256, 1000)
+
+
+        val rect2 = roundRect(150.0, 50.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#000000"], 4.0, true).xy(256, 1000)
         rect2.onClick {
+            if(bool) {
+                rect2.fill = Colors["#000000"]
+                rect2.stroke = Colors["#FFFFFF"]
+            }
+            else {
+                rect2.fill = Colors["#FFFFFF"]
+                rect2.stroke = Colors["#000000"]
+            }
+            bool =! bool
             leftWalk = !leftWalk
         }
 
@@ -131,7 +158,8 @@ class Scene2() : Scene() {
 
                 )
 
-        // text("Left", font = font, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT, ).position(160, 1030)
+        //text("Left", font = font, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT, ).position(160, 1030)
+        //text("Right", font = font2, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT, ).position(310, 1030)
 
         // text("Right", font = font2, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT, ).position(310, 1030)
 
