@@ -28,6 +28,7 @@ import com.soywiz.korinject.AsyncInjector
 import com.soywiz.korio.file.std.*
 import com.soywiz.korma.geom.*
 import com.soywiz.korma.interpolation.*
+import kotlin.math.min
 import kotlin.reflect.KClass
 
 
@@ -59,37 +60,54 @@ class Scene1() : Scene() {
 class Scene2() : Scene() {
     override suspend fun Container.sceneInit() {
 
-        val jumpIntensity = 1.0
-        val moveIntensity = 1
+        val jumpIntensity = 4.0
+        val moveIntensity = 2.0
+        val maxSpeed = 8.0
+        val gravity = 0.05
 
         var leftWalk = false
-        var horizontal = 1 * moveIntensity
+        var horizontal = 1.0 * moveIntensity
         var vertical = 0.0
-        var groundObjects: MutableList<ShapeView> = mutableListOf()
 
-        val baseground = roundRect(1000.0, 50.0, 0.0, 0.0, Colors.WHITE, Colors.BLACK, 4.0, true).xy(0, 900)
-
-
-        groundObjects.addAll(mutableListOf(baseground))
+        // making ground objects
+        // size = 512 x 1028
+        var groundObjects: MutableList<ShapeView> = createGroundObjects(this)
 
         val circle = circle(25.0, Colors.WHITE).xy(256, 700)
         circle.onClick {
             circle.color = Colors.RED
         }
         circle.addUpdater {
-            vertical -= 0.005
-            if (circle.x < 0.0 || circle.x > 512 - circle.radius*2) {
-                horizontal -= horizontal *2
+            // update ball gravity
+            vertical -= gravity
+
+            //bounce on border collission
+            if (circle.x < 0.0 || circle.x > 512 - circle.radius * 2) {
+                horizontal -= horizontal * 2
             }
+
+            //check Collission
+            var collission = colliding(this, groundObjects)
+            if (collission != 0) {
+                vertical = collission * jumpIntensity
+            }
+
+            // clamp max Ball Speed in all Vertical Direction
+            vertical = min(horizontal * vertical, maxSpeed) / horizontal
+
+            // set ball values
             if (leftWalk) {
                 circle.xy(circle.x - horizontal, circle.y - vertical)
             } else {
                 circle.xy(circle.x + horizontal, circle.y - vertical)
             }
 
-            if (colliding(this, groundObjects)) {
-                vertical = 1 * jumpIntensity
+            updateShapePositions(this, groundObjects)
+
+            if(y > 1080) {
+                //handle Death
             }
+
         }
 
         val rect = roundRect(150.0, 50.0, 0.0, 0.0, Colors.BLACK, Colors.WHITE, 4.0, true).xy(106, 1000)
@@ -131,12 +149,33 @@ class Scene2() : Scene() {
          */
     }
 
-    private fun colliding(circle: ShapeView, groundObjects: MutableList<ShapeView>): Boolean {
-        groundObjects.forEach {shape ->
-            if (circle.collidesWith(shape)) {
-                return true
+    private fun createGroundObjects(container: Container): MutableList<ShapeView> {
+        val baseground = container.roundRect(1000.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(0, 900)
+        val ground1 = container.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(0, 750)
+        val ground2 = container.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 200, 600)
+        return mutableListOf(baseground, ground1, ground2)
+    }
+
+
+    private fun updateShapePositions(circle: Circle, groundObjects: MutableList<ShapeView>) {
+        if (circle.y < 540) {
+            val difference = circle.y - 540.0
+            circle.y -= difference
+            groundObjects.forEach { shape ->
+                shape.y -= difference
             }
         }
-        return false
+    }
+
+    private fun colliding(circle: ShapeView, groundObjects: MutableList<ShapeView>): Int {
+        groundObjects.forEach { shape ->
+            if (circle.collidesWith(shape)) {
+                if (circle.y < shape.y)
+                    return 1
+                else
+                    return -1
+            }
+        }
+        return 0
     }
 }
