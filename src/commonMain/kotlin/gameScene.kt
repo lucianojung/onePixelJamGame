@@ -1,10 +1,19 @@
+import com.soywiz.klock.Frequency
+import com.soywiz.klock.timesPerSecond
 import com.soywiz.korge.input.onClick
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.view.*
 import com.soywiz.korim.bitmap.Bitmap
 import com.soywiz.korim.color.Colors
+import com.soywiz.korim.font.BitmapFont
+import com.soywiz.korim.font.DefaultTtfFont
 import com.soywiz.korim.format.readBitmap
+import com.soywiz.korim.text.CreateStringTextRenderer
+import com.soywiz.korim.text.TextAlignment
 import com.soywiz.korio.file.std.resourcesVfs
+import com.soywiz.korma.geom.degrees
+import com.soywiz.korma.geom.plus
+import com.soywiz.korma.geom.sin
 import kotlin.math.min
 import kotlin.random.Random
 
@@ -14,8 +23,10 @@ class Scene2() : Scene() {
     private var moveIntensity = 2.0
     private var maxSpeed = 8.0
     private var gravity = 0.05
+    private var pixeldepth = 0.0
 
     private var leftWalk = false
+    private var playerIsAlive = true
 
     private var mainContainer: Container = Container()
     private var player: Circle = Circle()
@@ -61,7 +72,7 @@ class Scene2() : Scene() {
         player.onClick {
             player.color = Colors.RED
         }
-        player.addUpdater {
+        player.addFixedUpdater(Frequency(hertz = 60.0)) {
             // update ball gravity
             vertical -= gravity
 
@@ -91,6 +102,24 @@ class Scene2() : Scene() {
             }
 
             updateShapePositions()
+
+            if (player.y > 950 && playerIsAlive) {
+                playerIsAlive = false
+                mainContainer.solidRect(512.0, 1080.0, Colors["#000000"]).xy(0, 0)
+                mainContainer.text("Restart Game", textSize = 32.0, alignment = TextAlignment.BASELINE_LEFT).position(156, 500)
+                val restartButton = mainContainer.roundRect(400.0, 100.0, 5.0, 5.0, Colors.TRANSPARENT_BLACK, Colors.WHITE, 4.0, true).xy(106, 450)
+
+                restartButton.onClick {
+                    playerIsAlive = true
+                    sceneContainer.changeTo<Scene2>()
+                }
+
+                val font = BitmapFont(
+                        DefaultTtfFont, 64.0,
+                        paint = Colors.WHITE,
+                )
+                mainContainer.text("Game Over!", font = font, textSize = 64.0, alignment = TextAlignment.BASELINE_LEFT).position(12, 300)
+            }
 
         }
     }
@@ -185,6 +214,7 @@ class Scene2() : Scene() {
             treasureObjects.forEach {shape ->
                 shape.y -= difference
             }
+            pixeldepth += difference
         }
     }
 
