@@ -92,10 +92,6 @@ class Scene2() : Scene() {
 
             updateShapePositions()
 
-            if (y > 1080) {
-                //handle Death
-            }
-
         }
     }
 
@@ -165,7 +161,8 @@ class Scene2() : Scene() {
         if (player.y < 540) {
             val difference = player.y - 540.0
             player.y -= difference
-            groundObjects.forEach {
+            groundObjects.forEach {shape ->
+                shape.y -= difference
             }
             treasureObjects.forEach {shape ->
                 shape.y -= difference
