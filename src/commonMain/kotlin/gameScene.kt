@@ -237,7 +237,7 @@ class Scene2() : Scene() {
         val ground16 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 200, -2250)
         val ground21 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -50, -2400)
         val ground23 = mainContainer.roundRect(312.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -2550)
-        val ground30 = mainContainer.roundRect(450.0, 50.0, 0.0, 0.0, Colors.MAGENTA).xy(512 - 450, -2650)
+        val ground30 = mainContainer.roundRect(425.0, 50.0, 0.0, 0.0, Colors.MAGENTA).xy(512 - 425, -2650)
 
 
 
