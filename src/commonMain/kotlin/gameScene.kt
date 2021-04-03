@@ -229,13 +229,16 @@ class Scene2() : Scene() {
         val ground25 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.GOLDENROD).xy(512 - 100, -1500)
         val ground26 = mainContainer.roundRect(80.0, 50.0, 0.0, 0.0, Colors.DARKGREEN).xy(512 - 80, -1650)
         val ground27 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.DARKMAGENTA).xy(512 - 50, -1800)
-        val ground28 = mainContainer.roundRect(80.0, 50.0, 0.0, 0.0, Colors.GOLDENROD).xy(512 - 80, -1850)
-        val ground29 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.DARKGREEN).xy(512 - 100, -1950)
-        val ground15 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.VIOLET).xy(512 - 512, -2100)
-        val ground16 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 - 100, -2200)
-        val ground21 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 -150, -2300)
-        val ground23 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 150, -2350)
-        val ground30 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.DARKMAGENTA).xy(512 - 50, -2750)
+
+        val ground28 = mainContainer.roundRect(80.0, 50.0, 0.0, 0.0, Colors.GOLDENROD).xy(512 - 450, -1850)
+
+        val ground29 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.DARKGREEN).xy(512 - 50, -1950)
+        val ground15 = mainContainer.roundRect(300.0, 50.0, 0.0, 0.0, Colors.VIOLET).xy(512 - 512, -2100)
+        val ground16 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 - 200, -2250)
+        val ground21 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 -50, -2400)
+        val ground23 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 400, -2550)
+        val ground30 = mainContainer.roundRect(450.0, 50.0, 0.0, 0.0, Colors.DARKMAGENTA).xy(512 - 450, -2650)
+
 
 
 
@@ -247,8 +250,10 @@ class Scene2() : Scene() {
         val image1 = mainContainer.image(bitmap).scale(0.4).position(52, 705)
         val image2 = mainContainer.image(bitmap).scale(0.4).position(450, 55)
         val image3 = mainContainer.image(bitmap).scale(0.4).position(5, -795)
+        val image4 = mainContainer.image(bitmap).scale(0.4).position(30, -1895)
 
-        return mutableListOf(image1,image2,image3)
+
+        return mutableListOf(image1,image2,image3,image4)
     }
 
     private fun updateShapePositions() {
