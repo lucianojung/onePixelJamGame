@@ -117,32 +117,18 @@ class Scene2() : Scene() {
         }
 
         var bool = true
-        val rect = roundRect(150.0, 50.0, 0.0, 0.0, Colors["#000000"] , Colors["#FFFFFF"], 4.0, true).xy(106, 1000)
-        rect.onClick {
-            leftWalk = !leftWalk
-            if(bool) {
-                rect.fill = Colors["#FFFFFF"]
-                rect.stroke = Colors["#000000"]
-            }
-            else {
-                rect.fill = Colors["#000000"]
-                rect.stroke = Colors["#FFFFFF"]
-            }
-            bool =! bool
-        }
-
-
 
         val rect2 = roundRect(150.0, 50.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#000000"], 4.0, true).xy(256, 1000)
+        val rect = roundRect(150.0, 50.0, 0.0, 0.0, Colors["#000000"] , Colors["#FFFFFF"], 4.0, true).xy(106, 1000)
+
+        rect.onClick {
+            changeButtonColor(bool, rect, rect2)
+            bool =! bool
+            leftWalk = !leftWalk
+        }
+
         rect2.onClick {
-            if(bool) {
-                rect2.fill = Colors["#000000"]
-                rect2.stroke = Colors["#FFFFFF"]
-            }
-            else {
-                rect2.fill = Colors["#FFFFFF"]
-                rect2.stroke = Colors["#000000"]
-            }
+            changeButtonColor(bool, rect, rect2)
             bool =! bool
             leftWalk = !leftWalk
         }
@@ -175,6 +161,21 @@ class Scene2() : Scene() {
           }
 
          */
+    }
+
+    private fun changeButtonColor(bool: Boolean, rect: RoundRect, rect2: RoundRect) {
+        if(bool) {
+            rect.fill = Colors["#FFFFFF"]
+            rect.stroke = Colors["#000000"]
+            rect2.fill = Colors["#000000"]
+            rect2.stroke = Colors["#FFFFFF"]
+        }
+        else {
+            rect.fill = Colors["#000000"]
+            rect.stroke = Colors["#FFFFFF"]
+            rect2.fill = Colors["#FFFFFF"]
+            rect2.stroke = Colors["#000000"]
+        }
     }
 
     private fun createGroundObjects(container: Container): MutableList<ShapeView> {
