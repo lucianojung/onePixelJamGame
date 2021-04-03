@@ -85,6 +85,7 @@ class Scene2() : Scene() {
                 )
 
         text("Left", font = font, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT, ).position(160, 1030)
+
         text("Right", font = font2, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT, ).position(310, 1030)
 
 
