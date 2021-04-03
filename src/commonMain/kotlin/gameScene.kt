@@ -26,7 +26,7 @@ class Scene2() : Scene() {
     private var pixeldepth = 0.0
 
     private var leftWalk = false
-    private var playerIsAlive = true
+    private var playerIsAlive = false
 
     private var mainContainer: Container = Container()
     private var player: Circle = Circle()
@@ -128,7 +128,7 @@ class Scene2() : Scene() {
         val powerUpNumber = (Random.nextDouble() * 6).toInt()
         when (powerUpNumber) {
             1 -> gravity -= 0.005
-            2 -> gravity += 0.005
+            2 -> gravity += 0.02
             3 -> moveIntensity += 0.5
             4 -> moveIntensity -= 0.5
             5 -> jumpIntensity -= 0.5
@@ -166,16 +166,16 @@ class Scene2() : Scene() {
         val ground82 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 -150, 100)
         val ground9 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -250)
 
-        val ground102 = mainContainer.roundRect(225.0, 50.0, 0.0, 0.0, Colors.RED).xy(512 -512, -400)
+        val ground102 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.RED).xy(512 -512, -350)
         val ground11 = mainContainer.roundRect(80.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 80, -500)
 
         val ground17 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 150, -200)
-        val ground12 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.ORANGE).xy(512 -300, -600)
-        val ground13 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 150, -800)
+        val ground12 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.ORANGE).xy(512 -400, -600)
+        val ground13 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 100, -750)
         val ground10 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -512, -750)
         val ground14 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.BLUE).xy(512 - 512, -850)
 
-        val ground19 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -250, -1000)
+        val ground19 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -150, -1000)
         val ground20 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -1150)
 
         val ground18 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -1400)
@@ -188,7 +188,7 @@ class Scene2() : Scene() {
         val ground29 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.DARKGREEN).xy(512 - 50, -2000)
         val ground15 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.VIOLET).xy(512 - 512, -2100)
         val ground16 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 - 100, -2200)
-        val ground21 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 -150, -2500)
+        val ground21 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 -150, -2300)
 
 
 

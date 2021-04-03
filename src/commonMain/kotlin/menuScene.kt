@@ -19,7 +19,7 @@ class Scene1() : Scene() {
             sceneContainer.changeTo<Scene2>()
         }
 
-        roundRect(300.0, 50.0, 5.0, 5.0, Colors.BLACK, Colors.WHITE, 4.0, true).xy(106, 800)
+        roundRect(400.0, 50.0, 5.0, 5.0, Colors.BLACK, Colors.WHITE, 4.0, true).xy(6, 800)
 
         val font = BitmapFont(
                 DefaultTtfFont, 128.0,
@@ -38,6 +38,6 @@ class Scene1() : Scene() {
             advance(advance)
         }).position(12, 300)
 
-        text("TEST", font = font, textSize = 128.0, alignment = TextAlignment.BASELINE_LEFT).position(300,300)
+        text("Luciano Jung & Maria Lorenz", font = font, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT).position(20,830)
     }
 }
