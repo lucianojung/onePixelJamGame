@@ -208,17 +208,17 @@ class Scene2() : Scene() {
         val ground6 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -250, 50)
         val ground7 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, 150)
         val ground8 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -400, -100)
-        val ground82 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 -150, 100)
+        val ground82 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -150, 100)
         val ground9 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -250)
 
-        val ground102 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.RED).xy(512 -512, -350)
+        val ground102 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -512, -350)
         val ground11 = mainContainer.roundRect(80.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 80, -500)
 
         val ground17 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 150, -200)
-        val ground12 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.ORANGE).xy(512 -400, -600)
+        val ground12 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -400, -600)
         val ground13 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 100, -750)
         val ground10 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -512, -750)
-        val ground14 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.BLUE).xy(512 - 512, -850)
+        val ground14 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -850)
 
         val ground19 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -150, -1000)
         val ground20 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -1150)
@@ -226,18 +226,18 @@ class Scene2() : Scene() {
         val ground18 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 200, -1350)
 
         val ground24 = mainContainer.roundRect(230.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -350, -1300)
-        val ground25 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.GOLDENROD).xy(512 - 100, -1500)
-        val ground26 = mainContainer.roundRect(80.0, 50.0, 0.0, 0.0, Colors.DARKGREEN).xy(512 - 80, -1650)
-        val ground27 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.DARKMAGENTA).xy(512 - 50, -1800)
+        val ground25 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 100, -1500)
+        val ground26 = mainContainer.roundRect(80.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 80, -1650)
+        val ground27 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 50, -1800)
 
-        val ground28 = mainContainer.roundRect(80.0, 50.0, 0.0, 0.0, Colors.GOLDENROD).xy(512 - 450, -1850)
+        val ground28 = mainContainer.roundRect(80.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 450, -1850)
 
-        val ground29 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.DARKGREEN).xy(512 - 50, -1950)
-        val ground15 = mainContainer.roundRect(300.0, 50.0, 0.0, 0.0, Colors.VIOLET).xy(512 - 512, -2100)
-        val ground16 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 - 200, -2250)
-        val ground21 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 -50, -2400)
+        val ground29 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 50, -1950)
+        val ground15 = mainContainer.roundRect(300.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -2100)
+        val ground16 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 200, -2250)
+        val ground21 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -50, -2400)
         val ground23 = mainContainer.roundRect(312.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -2550)
-        val ground30 = mainContainer.roundRect(450.0, 50.0, 0.0, 0.0, Colors.DARKMAGENTA).xy(512 - 450, -2650)
+        val ground30 = mainContainer.roundRect(450.0, 50.0, 0.0, 0.0, Colors.MAGENTA).xy(512 - 450, -2650)
 
 
 
@@ -250,7 +250,7 @@ class Scene2() : Scene() {
         val image1 = mainContainer.image(bitmap).scale(0.4).position(52, 705)
         val image2 = mainContainer.image(bitmap).scale(0.4).position(450, 55)
         val image3 = mainContainer.image(bitmap).scale(0.4).position(5, -795)
-        val image4 = mainContainer.image(bitmap).scale(0.4).position(50, -1895)
+        val image4 = mainContainer.image(bitmap).scale(0.4).position(65, -1895)
 
 
         return mutableListOf(image1,image2,image3,image4)
