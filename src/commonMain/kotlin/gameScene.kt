@@ -26,6 +26,7 @@ class Scene2() : Scene() {
     private var pixeldepth = 0.0
 
     private var leftWalk = false
+    private var playerIsAlive = true
 
     private var mainContainer: Container = Container()
     private var player: Circle = Circle()
@@ -102,12 +103,14 @@ class Scene2() : Scene() {
 
             updateShapePositions()
 
-            if (player.y > 950) {
+            if (player.y > 950 && playerIsAlive) {
+                playerIsAlive = false
                 mainContainer.solidRect(512.0, 1080.0, Colors["#000000"]).xy(0, 0)
                 mainContainer.text("Restart Game", textSize = 32.0, alignment = TextAlignment.BASELINE_LEFT).position(156, 500)
                 val restartButton = mainContainer.roundRect(400.0, 100.0, 5.0, 5.0, Colors.TRANSPARENT_BLACK, Colors.WHITE, 4.0, true).xy(106, 450)
 
                 restartButton.onClick {
+                    playerIsAlive = true
                     sceneContainer.changeTo<Scene2>()
                 }
 
