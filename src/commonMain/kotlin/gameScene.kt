@@ -174,7 +174,7 @@ class Scene2() : Scene() {
     }
 
     private fun collidingPowerUps(): Boolean {
-        groundObjects.forEach { shape ->
+        treasureObjects.forEach { shape ->
             if (player.collidesWith(shape)) {
                 shape.removeFromParent()
                 return true
