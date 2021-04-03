@@ -236,7 +236,7 @@ class Scene2() : Scene() {
         val ground15 = mainContainer.roundRect(300.0, 50.0, 0.0, 0.0, Colors.VIOLET).xy(512 - 512, -2100)
         val ground16 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 - 200, -2250)
         val ground21 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 -50, -2400)
-        val ground23 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 400, -2550)
+        val ground23 = mainContainer.roundRect(312.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -2550)
         val ground30 = mainContainer.roundRect(450.0, 50.0, 0.0, 0.0, Colors.DARKMAGENTA).xy(512 - 450, -2650)
 
 
@@ -250,7 +250,7 @@ class Scene2() : Scene() {
         val image1 = mainContainer.image(bitmap).scale(0.4).position(52, 705)
         val image2 = mainContainer.image(bitmap).scale(0.4).position(450, 55)
         val image3 = mainContainer.image(bitmap).scale(0.4).position(5, -795)
-        val image4 = mainContainer.image(bitmap).scale(0.4).position(30, -1895)
+        val image4 = mainContainer.image(bitmap).scale(0.4).position(50, -1895)
 
 
         return mutableListOf(image1,image2,image3,image4)
