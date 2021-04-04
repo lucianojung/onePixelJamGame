@@ -38,6 +38,6 @@ class Scene1() : Scene() {
             advance(advance)
         }).position(15, 300)
 
-        text("Luciano Jung & Maria Lorenz", font = font, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT).position(120,830)
+        text("Luciano Jung & Maria Lorenz", font = font, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT).position(115,830)
     }
 }
