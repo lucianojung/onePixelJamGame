@@ -1,7 +1,9 @@
 import com.soywiz.klock.Frequency
+import com.soywiz.klock.seconds
 import com.soywiz.korau.sound.readSound
 import com.soywiz.korge.input.onClick
 import com.soywiz.korge.scene.Scene
+import com.soywiz.korge.scene.delay
 import com.soywiz.korge.view.*
 import com.soywiz.korim.bitmap.Bitmap
 import com.soywiz.korim.color.ColorTransform
@@ -202,7 +204,23 @@ class Scene3() : Scene() {
                 infotext.setText("Gravity inverted")
                 gravity = -0.05
             }
-
+            7 -> {
+                infotext.setText("color invert")
+                groundObjects.forEach { shape ->
+                    shape.fill = Colors["#000000"]
+                }
+                var rect = mainContainer.solidRect(512, 1080, Colors.WHITE)
+                mainContainer.sendChildToBack(rect)
+                player.fill = Colors.BLACK
+                launchImmediately{
+                    delay(5.seconds)
+                    rect.removeFromParent()
+                    groundObjects.forEach { shape ->
+                        shape.fill = Colors["#FFFFFF"]
+                    }
+                    player.fill = Colors.WHITE
+                }
+            }
             8 -> {
                 infotext.setText("Speed increased")
                 jumpIntensity += 8.0
