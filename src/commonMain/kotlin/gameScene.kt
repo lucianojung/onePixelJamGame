@@ -54,6 +54,11 @@ class Scene2() : Scene() {
 
         initPlayer()
 
+        val exitBitmap: Bitmap = resourcesVfs["exit.png"].readBitmap()
+        val exitButton = mainContainer.image(exitBitmap).scale(0.4).position(52, 705)
+        exitButton.onClick {
+            sceneContainer.changeTo<Scene1>()
+        }
 
         //walls and player control area
        roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(0, 0)
@@ -330,26 +335,11 @@ class Scene2() : Scene() {
     private fun collidingGround(): Double {
         groundObjects.forEach { shape ->
             if (player.collidesWith(shape)) {
-                if (player.y + player.radius < shape.y &&
-                        player.x + player.radius > shape.x &&
-                        player.x < shape.x + shape.scaledWidth) { //shaut ob oben
+                if (player.y < shape.y) {
                     //playBounceSound()
                     return 1.0
-                }
-                else if(player.y < shape.y + shape.scaledHeight &&
-                        player.x + player.radius > shape.x &&
-                        player.x < shape.x + shape.scaledWidth) { //shaut ob unten
-                    return -0.25
-                }
-                else if (player.x + player.radius < shape.x + shape.scaledWidth/2) { //shaut ob links
-                    leftWalk = true
-                    return 0.0
-                }
-                else if(player.x > shape.x + shape.scaledWidth/2) { //shaut ob rechts
-                    leftWalk = false
-                    return 0.0
-                }
-
+                } else
+                    return -0.5
             }
         }
         return 0.0
