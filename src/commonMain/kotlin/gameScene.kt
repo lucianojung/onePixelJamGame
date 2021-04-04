@@ -25,6 +25,8 @@ import kotlin.random.Random
 class Scene2() : Scene() {
 
     private var jumpIntensity = 4.0
+    private var multiplikator = 1.0
+    private var multiplikator2 = 1.0
     private var moveIntensity = 2.0
     private var maxSpeed = 8.0
     private var gravity = 0.05
@@ -52,13 +54,14 @@ class Scene2() : Scene() {
 
         initPlayer()
 
+
         //walls and player control area
-        roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(0, 0)
-        roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(502, 0)
+       roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(0, 0)
+       roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(502, 0)
 
         roundRect(1000.0, 200.0, 0.0, 0.0, Colors["#000000"], Colors["#000000"], 0.0, true).xy(0, 949)
-        val buttonLeft = roundRect(150.0, 50.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#000000"], 4.0, true).xy(256, 1000)
-        val buttonRight = roundRect(150.0, 50.0, 0.0, 0.0, Colors["#000000"], Colors["#FFFFFF"], 4.0, true).xy(106, 1000)
+        val buttonLeft = roundRect(150.0, 70.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#000000"], 4.0, true).xy(256, 980)
+        val buttonRight = roundRect(150.0, 70.0, 0.0, 0.0, Colors["#000000"], Colors["#FFFFFF"], 4.0, true).xy(106, 980)
 
         buttonRight.onClick {
             changeButtonColor(leftWalk, buttonRight, buttonLeft)
@@ -108,7 +111,7 @@ class Scene2() : Scene() {
 
             //check Collission
             val collission = collidingGround()
-            if (collission != 0) {
+            if (collission != 0.0) {
                 vertical = collission * jumpIntensity
             }
             //check for powerup collection
@@ -160,46 +163,64 @@ class Scene2() : Scene() {
     }
 
     private fun activateRandomPowerUp() {
-        val powerUpNumber = (Random.nextDouble() * 6).toInt()
+        val powerUpNumber = (Random.nextDouble() * 7).toInt()
         when (powerUpNumber) {
             1 -> {
                 infotext.setText("Gravity decreased")
                 gravity -= 0.005
+
             }
             2 -> {
                 infotext.setText("Gravity increased")
                 gravity += 0.02
+
             }
             3 -> {
                 infotext.setText("Sideway move speed increased")
                 moveIntensity += 0.75
+
             }
             4 -> {
                 infotext.setText("Sideway move speed decreased")
                 moveIntensity -= 0.5
+
             }
             5 -> {
                 infotext.setText("Jumping Intensity decreased")
                 jumpIntensity -= 0.5
+
             }
             6 -> {
                 infotext.setText("Gravity inverted")
                 gravity = -0.05
+
+            }
+            7 -> {
+                infotext.setText("color invert")
+                //todo farben invertieren
+
             }
             else -> {
                 infotext.setText("Jumping Intensity increased")
                 jumpIntensity += 1.0
+
             }
         }
         powerUpActive = true
         powerUpTime = 300
+
     }
 
     private fun deleteAllPowerUps() {
-        jumpIntensity = 4.0
-        moveIntensity = 2.0
-        maxSpeed = 8.0
+        multiplikator += 0.0005
+        multiplikator2 += 0.00005
+
+        jumpIntensity = 4.0 * multiplikator
+        moveIntensity = 2.0 * multiplikator
+        maxSpeed = 8.0 * multiplikator
         gravity = 0.05
+
+
     }
 
     private fun changeButtonColor(bool: Boolean, rect: RoundRect, rect2: RoundRect) {
@@ -249,26 +270,16 @@ class Scene2() : Scene() {
         val ground27 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 200, -2250)
         val ground28 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -50, -2400)
         val ground29 = mainContainer.roundRect(350.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -2550)
-        val ground30 = mainContainer.roundRect(425.0, 50.0, 0.0, 0.0, Colors.MAGENTA).xy(512 - 425, -2650)
+        val ground30 = mainContainer.roundRect(425.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 425, -2650)
 
-        val ground31 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.RED).xy(512 - 350, -2750)
-        val ground32 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.RED).xy(512 - 250, -2800)
-
-        val ground33 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.GREEN).xy(512 - 50, -2800)
-
-        val ground34 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.YELLOW).xy(512 - 200, -2850)
-        val ground35 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.BLUE).xy(512 - 512+100, -2800)
-        val ground36 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.YELLOW).xy(512 - 200, -2900)
-        val ground37 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.YELLOW).xy(512 - 200, -2950)
-        val ground38 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.YELLOW).xy(512 - 250, -3000)
-        val ground39 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.BLUE).xy(512 - 512+50, -2850)
-        val ground40 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.BLUE).xy(512 - 512+50, -2900)
-
-        val ground41 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.BLUE).xy(512 -512+50, -2950)
-        val ground42 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.BLUE).xy(512 -512+100, -3000)
-        //val ground42 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.MAGENTA).xy(512 - 350, -3050)
-
-        val ground43 = mainContainer.roundRect(550.0, 50.0, 0.0, 0.0, Colors.MAGENTA).xy(512 - 512, -3400)
+        val ground31 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 50, -2750)
+        val ground32 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+150, -2750)
+        val ground33 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2800)
+        val ground34 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2850)
+        val ground35 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2900)
+        val ground36 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+150, -2950)
+        val ground37 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+200, -3000)
+        val ground38 = mainContainer.roundRect(512.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -3400)
 
 
 
@@ -277,8 +288,9 @@ class Scene2() : Scene() {
                 ground8,ground9,ground10,ground11,ground12,ground13,ground14,ground15,ground16,ground17,
                 ground18,ground19,ground20,ground21,ground22,ground23,ground24,ground25,ground26,ground27,
                 ground28,ground29,ground30,ground31,ground32,ground33,ground34,ground35,ground36,ground37,
-                ground38,ground39,ground40,ground41,ground42,ground43)
+                ground38)
     }
+
 
     private suspend fun createTreasureObjects(): MutableList<Image> {
         val bitmap: Bitmap = resourcesVfs["chest_white.png"].readBitmap()
@@ -287,9 +299,7 @@ class Scene2() : Scene() {
         val image2 = mainContainer.image(bitmap).scale(0.4).position(450, 55)
         val image3 = mainContainer.image(bitmap).scale(0.4).position(5, -795)
         val image4 = mainContainer.image(bitmap).scale(0.4).position(65, -1895)
-        val image5 = mainContainer.image(bitmap2).scale(0.4).position(215, -2795)
-
-
+        val image5 = mainContainer.image(bitmap2).scale(0.4).position(200, -3045)
         return mutableListOf(image1,image2,image3,image4,image5)
     }
 
@@ -317,17 +327,27 @@ class Scene2() : Scene() {
         return false
     }
 
-    private fun collidingGround(): Int {
+    private fun collidingGround(): Double {
         groundObjects.forEach { shape ->
             if (player.collidesWith(shape)) {
-                if (player.y < shape.y) {
+                if (player.y + player.radius * 2 < shape.y) { //shaut ob oben
                     //playBounceSound()
-                    return 1
+                    return 1.0
                 }
-                else
-                    return -1
+                else if(player.y >= shape.y + shape.height) { //shaut ob unten
+                    return -0.25
+                }
+                else if (player.x + player.radius * 2 < shape.x) { //shaut ob links
+                    leftWalk != leftWalk
+                    return 0.0
+                }
+                else if(player.x >= shape.x + shape.width) {
+                    leftWalk != leftWalk
+                    return 0.0
+                }
+
             }
         }
-        return 0
+        return 0.0
     }
 }
