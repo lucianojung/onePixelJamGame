@@ -144,12 +144,12 @@ class Scene2() : Scene() {
 
             if (player.y > 950 && playerIsAlive) {
                 playerIsAlive = false
-                handleGameOver()
+                handleGameOver("Game Over!")
             }
             //200, -3045 - -3000
             if (player.x > 220 && player.x < 230 && player.y < treasureObjects[treasureObjects.size-1].y && playerIsAlive){
                 playerIsAlive = false
-                handleGameOver()
+                handleGameOver("You Win!")
             }
         }
     }
@@ -165,7 +165,7 @@ class Scene2() : Scene() {
         }
     }
 
-    private fun handleGameOver() {
+    private fun handleGameOver(text: String) {
         mainContainer.solidRect(512.0, 1080.0, Colors["#000000"]).xy(0, 0)
         mainContainer.text("Restart Game", textSize = 32.0, alignment = TextAlignment.CENTER).position(256, 530)
         val restartButton = mainContainer.roundRect(400.0, 100.0, 5.0, 5.0, Colors.TRANSPARENT_BLACK, Colors.WHITE, 4.0, true).xy(56, 500)
@@ -179,7 +179,7 @@ class Scene2() : Scene() {
                 DefaultTtfFont, 64.0,
                 paint = Colors.WHITE,
         )
-        mainContainer.text("Game Over!", font = font, textSize = 64.0, alignment = TextAlignment.CENTER).position(256, 300)
+        mainContainer.text(text, font = font, textSize = 64.0, alignment = TextAlignment.CENTER).position(256, 300)
         mainContainer.text("Pixelheight reached: " + (-1 * (pixeldepth + 1048 - player.y)).toInt().toString() , font = font, textSize = 32.0, alignment = TextAlignment.CENTER).position(256, 400)
     }
 
