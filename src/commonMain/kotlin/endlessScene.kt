@@ -289,7 +289,7 @@ class Scene3() : Scene() {
 
         do {
             val start = Random.nextDouble(462.0) + 20
-            val width = min(Random.nextDouble(350.0) + 50, 462 - start)
+            val width = min(Random.nextDouble(350.0) + 50, 442 - start)
 
             newPlattform.removeFromParent()
             newPlattform = mainContainer.roundRect(width.toDouble(), 50.0, 0.0, 0.0, Colors.WHITE).xy(start.toInt(), (lastPlattform.y - plattformGap).toInt())
