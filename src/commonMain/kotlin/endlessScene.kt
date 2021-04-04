@@ -17,9 +17,12 @@ import kotlin.random.Random
 
 class Scene3() : Scene() {
 
+    private var multiplikator = 1.0
+    private var multiplikator2 = 1.0
+
     private var jumpIntensity = 4.0
     private var moveIntensity = 2.0
-    private var maxSpeed = 8.0
+    private var maxSpeed = 9.0
     private var gravity = 0.05
     private val plattformGap = 150
     private var currentHeight = 900
@@ -64,7 +67,7 @@ class Scene3() : Scene() {
         exitButton.onClick {
             sceneContainer.changeTo<Scene1>()
         }
-
+        roundRect(452.0, 50.0, 5.0, 5.0, Colors.TRANSPARENT_BLACK).xy(60, 0)
         //walls and player control area
         roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(0, 0)
         roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(502, 0)
@@ -173,7 +176,7 @@ class Scene3() : Scene() {
     }
 
     private fun activateRandomPowerUp() {
-        val powerUpNumber = (Random.nextInt(6))
+        val powerUpNumber = (Random.nextInt(8))
         when (powerUpNumber) {
             1 -> {
                 infotext.setText("Gravity decreased")
@@ -199,6 +202,14 @@ class Scene3() : Scene() {
                 infotext.setText("Gravity inverted")
                 gravity = -0.05
             }
+
+            8 -> {
+                infotext.setText("Speed increased")
+                jumpIntensity += 8.0
+                moveIntensity += 8.0
+                maxSpeed += 4.0
+
+            }
             else -> {
                 infotext.setText("Jumping Intensity increased")
                 jumpIntensity += 0.5
@@ -209,9 +220,12 @@ class Scene3() : Scene() {
     }
 
     private fun deleteAllPowerUps() {
-        jumpIntensity = 4.0
-        moveIntensity = 2.0
-        maxSpeed = 8.0
+        multiplikator += 0.001
+        multiplikator2 += 0.00005
+
+        jumpIntensity = 4.0 * multiplikator2
+        moveIntensity = 2.0 * multiplikator2
+        maxSpeed = 8.0 * multiplikator
         gravity = 0.05
     }
 

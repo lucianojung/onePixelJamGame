@@ -64,6 +64,8 @@ class Scene2() : Scene() {
             sceneContainer.changeTo<Scene1>()
         }
 
+        roundRect(452.0, 50.0, 5.0, 5.0, Colors.TRANSPARENT_BLACK).xy(60, 0)
+
         //walls and player control area
        roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(0, 0)
        roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(502, 0)
@@ -144,6 +146,11 @@ class Scene2() : Scene() {
                 playerIsAlive = false
                 handleGameOver()
             }
+            //200, -3045 - -3000
+            if (player.x > 220 && player.x < 230 && player.y < treasureObjects[treasureObjects.size-1].y && playerIsAlive){
+                playerIsAlive = false
+                handleGameOver()
+            }
         }
     }
 
@@ -177,7 +184,7 @@ class Scene2() : Scene() {
     }
 
     private fun activateRandomPowerUp() {
-        val powerUpNumber = (Random.nextDouble() * 7).toInt()
+        val powerUpNumber = (Random.nextInt() * 8).toInt()
         when (powerUpNumber) {
             1 -> {
                 infotext.setText("Gravity decreased")
@@ -190,17 +197,17 @@ class Scene2() : Scene() {
 
             }
             3 -> {
-                infotext.setText("Sideway move speed increased")
+                infotext.setText("Sideway speed increased")
                 moveIntensity += 0.75
 
             }
             4 -> {
-                infotext.setText("Sideway move speed decreased")
+                infotext.setText("Sideway speed decreased")
                 moveIntensity -= 0.5
 
             }
             5 -> {
-                infotext.setText("Jumping Intensity decreased")
+                infotext.setText("Jumping decreased")
                 jumpIntensity -= 0.5
 
             }
@@ -226,8 +233,15 @@ class Scene2() : Scene() {
                     player.fill = Colors.WHITE
                 }
             }
+            8 -> {
+                infotext.setText("Speed increased")
+                jumpIntensity += 8.0
+                moveIntensity += 8.0
+                maxSpeed += 4.0
+
+            }
             else -> {
-                infotext.setText("Jumping Intensity increased")
+                infotext.setText("Jumping increased")
                 jumpIntensity += 1.0
 
             }
@@ -238,11 +252,11 @@ class Scene2() : Scene() {
     }
 
     private fun deleteAllPowerUps() {
-        multiplikator += 0.0005
+        multiplikator += 0.001
         multiplikator2 += 0.00005
 
-        jumpIntensity = 4.0 * multiplikator
-        moveIntensity = 2.0 * multiplikator
+        jumpIntensity = 4.0 * multiplikator2
+        moveIntensity = 2.0 * multiplikator2
         maxSpeed = 8.0 * multiplikator
         gravity = 0.05
 
@@ -300,9 +314,9 @@ class Scene2() : Scene() {
 
         val ground31 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 50, -2750)
         val ground32 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+150, -2750)
-        val ground33 = mainContainer.roundRect(250.0, 150.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2900)
-       // val ground34 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2850)
-        //val ground35 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2900)
+        val ground33 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2800)
+        val ground34 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2850)
+        val ground35 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2900)
         val ground36 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+150, -2950)
         val ground37 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+200, -3000)
         val ground38 = mainContainer.roundRect(512.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -3400)
@@ -313,7 +327,7 @@ class Scene2() : Scene() {
         return mutableListOf(baseground, ground1, ground2,ground3,ground4,ground5, ground6, ground7,
                 ground8,ground9,ground10,ground11,ground12,ground13,ground14,ground15,ground16,ground17,
                 ground18,ground19,ground20,ground21,ground22,ground23,ground24,ground25,ground26,ground27,
-                ground28,ground29,ground30,ground31,ground32,ground33,ground36,ground37,
+                ground28,ground29,ground30,ground31,ground32,ground33,ground34,ground35,ground36,ground37,
                 ground38)
     }
 

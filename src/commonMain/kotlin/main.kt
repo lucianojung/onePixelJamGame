@@ -2,6 +2,7 @@ import com.soywiz.korge.*
 import com.soywiz.korge.scene.Module
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korim.color.*
+import com.soywiz.korim.vector.SizedDrawable
 import com.soywiz.korinject.AsyncInjector
 import com.soywiz.korma.geom.*
 import kotlin.reflect.KClass
@@ -14,6 +15,9 @@ object ConfigModule : Module() {
     override val bgcolor = Colors["#000000"]
     override val size = SizeInt(512, 1080)
     override val mainScene: KClass<out Scene> = Scene1::class
+
+
+
 
     override suspend fun AsyncInjector.configure() {
         mapPrototype { Scene1() }
