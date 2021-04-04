@@ -14,6 +14,7 @@ import com.soywiz.korim.format.readBitmap
 import com.soywiz.korim.text.TextAlignment
 import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korio.file.std.resourcesVfs
+import kotlin.math.abs
 import kotlin.math.min
 import kotlin.random.Random
 
@@ -76,8 +77,8 @@ class Scene3() : Scene() {
         roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(502, 0)
 
         roundRect(1000.0, 200.0, 0.0, 0.0, Colors["#000000"], Colors["#000000"], 0.0, true).xy(0, 949)
-        val buttonLeft = roundRect(150.0, 70.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#000000"], 4.0, true).xy(256, 1000)
-        val buttonRight = roundRect(150.0, 70.0, 0.0, 0.0, Colors["#000000"], Colors["#FFFFFF"], 4.0, true).xy(106, 1000)
+        val buttonLeft = roundRect(150.0, 70.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#000000"], 4.0, true).xy(256, 980)
+        val buttonRight = roundRect(150.0, 70.0, 0.0, 0.0, Colors["#000000"], Colors["#FFFFFF"], 4.0, true).xy(106, 980)
 
         buttonRight.onClick {
             changeButtonColor(buttonRight, buttonLeft)
@@ -180,7 +181,7 @@ class Scene3() : Scene() {
                 paint = Colors.WHITE,
         )
         mainContainer.text("Game Over!", font = font, textSize = 64.0, alignment = TextAlignment.CENTER).position(256, 300)
-        mainContainer.text("Pixelheight reached: " + (-1 * (pixeldepth + 1048 - player.y)).toInt().toString(), font = font, textSize = 32.0, alignment = TextAlignment.CENTER).position(256, 400)
+        mainContainer.text("Pixel Highscore: " + (-1 * (pixeldepth + 1048 - player.y)).toInt().toString(), font = font, textSize = 32.0, alignment = TextAlignment.CENTER).position(256, 400)
     }
 
     private fun activateRandomPowerUp() {
@@ -195,15 +196,15 @@ class Scene3() : Scene() {
                 gravity += 0.02
             }
             3 -> {
-                infotext.setText("Sideway move speed increased")
+                infotext.setText("Sideway speed increased")
                 moveIntensity += 0.5
             }
             4 -> {
-                infotext.setText("Sideway move speed decreased")
+                infotext.setText("Sideway speed decreased")
                 moveIntensity -= 0.5
             }
             5 -> {
-                infotext.setText("Jumping Intensity decreased")
+                infotext.setText("Jumping decreased")
                 jumpIntensity -= 0.5
             }
             6 -> {
@@ -211,7 +212,7 @@ class Scene3() : Scene() {
                 gravity = -0.05
             }
             7 -> {
-                infotext.setText("color invert")
+                infotext.setText("Color invert")
                 groundObjects.forEach { shape ->
                     shape.fill = Colors["#000000"]
                 }
@@ -296,8 +297,7 @@ class Scene3() : Scene() {
         } while (
                 (lastPlattform.x + player.radius * 2 > newPlattform.x) &&
                 (lastPlattform.x + lastPlattform.scaledWidth - player.radius * 2 < newPlattform.x + newPlattform.scaledWidth) &&
-                (lastPlattform.x - newPlattform.x - newPlattform.scaledWidth < 250 ) &&
-                (newPlattform.x - lastPlattform.x - lastPlattform.scaledWidth < 250 )
+                (abs(lastPlattform.x - newPlattform.x) < 300 )
         )
         //calculate TreasureChest
         if (Random.nextInt(5) == 0) {

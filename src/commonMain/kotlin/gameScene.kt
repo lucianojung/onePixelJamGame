@@ -180,7 +180,7 @@ class Scene2() : Scene() {
                 paint = Colors.WHITE,
         )
         mainContainer.text(text, font = font, textSize = 64.0, alignment = TextAlignment.CENTER).position(256, 300)
-        mainContainer.text("Pixelheight reached: " + (-1 * (pixeldepth + 1048 - player.y)).toInt().toString() , font = font, textSize = 32.0, alignment = TextAlignment.CENTER).position(256, 400)
+        mainContainer.text("Pixel Highscore: " + (-1 * (pixeldepth + 1048 - player.y)).toInt().toString() , font = font, textSize = 32.0, alignment = TextAlignment.CENTER).position(256, 400)
     }
 
     private fun activateRandomPowerUp() {
