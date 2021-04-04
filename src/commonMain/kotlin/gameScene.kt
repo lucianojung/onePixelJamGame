@@ -1,5 +1,9 @@
 import com.soywiz.klock.Frequency
+import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
+import com.soywiz.korau.sound.PlaybackTimes
+import com.soywiz.korau.sound.Sound
+import com.soywiz.korau.sound.readSound
 import com.soywiz.korge.input.onClick
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.scene.delay
@@ -10,8 +14,11 @@ import com.soywiz.korim.font.BitmapFont
 import com.soywiz.korim.font.DefaultTtfFont
 import com.soywiz.korim.format.readBitmap
 import com.soywiz.korim.text.TextAlignment
+import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korio.file.std.resourcesVfs
 import com.soywiz.korio.lang.Thread_sleep
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.channelFlow
 import kotlin.math.min
 import kotlin.random.Random
 
@@ -27,14 +34,13 @@ class Scene2() : Scene() {
     private var powerUpActive: Boolean = false
 
     private var leftWalk = false
-    private var playerIsAlive = false
+    private var playerIsAlive = true
 
     private var mainContainer: Container = Container()
     private var player: Circle = Circle()
     private var groundObjects: MutableList<ShapeView> = mutableListOf()
     private var treasureObjects: MutableList<Image> = mutableListOf()
     private var infotext: Text = Text("")
-
 
     override suspend fun Container.sceneInit() {
         mainContainer = this
@@ -78,8 +84,9 @@ class Scene2() : Scene() {
 
         player = mainContainer.circle(25.0, Colors.WHITE).xy(256, 700)
         player.onClick {
-            player.color = Colors.RED
+            player.color = Colors.BLACK
         }
+
         player.addFixedUpdater(Frequency(hertz = 60.0)) {
             // update ball gravity
             vertical -= gravity
@@ -87,16 +94,6 @@ class Scene2() : Scene() {
             //bounce on border collission
             if (player.x < 10.0 || player.x > 502 - player.radius * 2) {
                 horizontal -= horizontal * 2
-            }
-
-            //check Collission
-            val collission = collidingGround()
-            if (collission != 0) {
-                vertical = collission * jumpIntensity
-            }
-            //check for powerup collection
-            if (collidingPowerUps()) {
-                activateRandomPowerUp()
             }
 
             //PowerUp Handling
@@ -107,6 +104,16 @@ class Scene2() : Scene() {
                 infotext.setText("")
                 powerUpActive = false
                 deleteAllPowerUps()
+            }
+
+            //check Collission
+            val collission = collidingGround()
+            if (collission != 0) {
+                vertical = collission * jumpIntensity
+            }
+            //check for powerup collection
+            if (collidingPowerUps()) {
+                activateRandomPowerUp()
             }
 
             // clamp max Ball Speed in all Vertical Direction
@@ -128,10 +135,16 @@ class Scene2() : Scene() {
         }
     }
 
+    private fun playBounceSound() {
+        launchImmediately {
+            resourcesVfs["Jump.mp3"].readSound().playAndWait()
+        }
+    }
+
     private fun handleGameOver() {
         mainContainer.solidRect(512.0, 1080.0, Colors["#000000"]).xy(0, 0)
-        mainContainer.text("Restart Game", textSize = 32.0, alignment = TextAlignment.BASELINE_LEFT).position(156, 500)
-        val restartButton = mainContainer.roundRect(400.0, 100.0, 5.0, 5.0, Colors.TRANSPARENT_BLACK, Colors.WHITE, 4.0, true).xy(106, 450)
+        mainContainer.text("Restart Game", textSize = 32.0, alignment = TextAlignment.CENTER).position(256, 530)
+        val restartButton = mainContainer.roundRect(400.0, 100.0, 5.0, 5.0, Colors.TRANSPARENT_BLACK, Colors.WHITE, 4.0, true).xy(56, 500)
 
         restartButton.onClick {
             playerIsAlive = true
@@ -142,7 +155,8 @@ class Scene2() : Scene() {
                 DefaultTtfFont, 64.0,
                 paint = Colors.WHITE,
         )
-        mainContainer.text("Game Over!", font = font, textSize = 64.0, alignment = TextAlignment.BASELINE_LEFT).position(12, 300)
+        mainContainer.text("Game Over!", font = font, textSize = 64.0, alignment = TextAlignment.CENTER).position(256, 300)
+        mainContainer.text("Pixelheight reached: " + (-1 * (pixeldepth + 1048 - player.y)).toInt().toString() , font = font, textSize = 32.0, alignment = TextAlignment.CENTER).position(256, 400)
     }
 
     private fun activateRandomPowerUp() {
@@ -167,6 +181,10 @@ class Scene2() : Scene() {
             5 -> {
                 infotext.setText("Jumping Intensity decreased")
                 jumpIntensity -= 0.5
+            }
+            6 -> {
+                infotext.setText("Gravity inverted")
+                gravity = -0.05
             }
             else -> {
                 infotext.setText("Jumping Intensity increased")
@@ -283,8 +301,10 @@ class Scene2() : Scene() {
     private fun collidingGround(): Int {
         groundObjects.forEach { shape ->
             if (player.collidesWith(shape)) {
-                if (player.y < shape.y)
+                if (player.y < shape.y) {
+                    //playBounceSound()
                     return 1
+                }
                 else
                     return -1
             }
