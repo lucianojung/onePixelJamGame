@@ -54,8 +54,10 @@ class Scene2() : Scene() {
 
         initPlayer()
 
+        //create exit Button and Listener
+        roundRect(49.0, 49.0, 5.0, 5.0, Colors.BLACK).xy(20, 0)
         val exitBitmap: Bitmap = resourcesVfs["exit.png"].readBitmap()
-        val exitButton = mainContainer.image(exitBitmap).scale(0.4).position(52, 705)
+        val exitButton = image(exitBitmap).scale(0.01).position(28, 8)
         exitButton.onClick {
             sceneContainer.changeTo<Scene1>()
         }

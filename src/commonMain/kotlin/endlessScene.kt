@@ -54,9 +54,15 @@ class Scene3() : Scene() {
             }
         }
 
-        treasureObjects = createTreasureObjects()
-
         initPlayer()
+
+        //create exit Button and Listener
+        roundRect(49.0, 49.0, 5.0, 5.0, Colors.BLACK).xy(20, 0)
+        val exitBitmap: Bitmap = resourcesVfs["exit.png"].readBitmap()
+        val exitButton = image(exitBitmap).scale(0.01).position(28, 8)
+        exitButton.onClick {
+            sceneContainer.changeTo<Scene1>()
+        }
 
         //walls and player control area
         roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(0, 0)
@@ -240,11 +246,13 @@ class Scene3() : Scene() {
     }
 
     private fun nextPlattform(lastPlattform: ShapeView): ShapeView {
+        var start = 0.0
+        var width = 0.0
         var newPlattform = ShapeView()
 
         do {
-            val start = Random.nextDouble(462.0)
-            val width = min(Random.nextDouble(350.0) + 50, 462 - start).toInt()
+            start = Random.nextDouble(462.0)
+            width = min(Random.nextDouble(350.0) + 50, 462 - start)
 
             newPlattform.removeFromParent()
             newPlattform = mainContainer.roundRect(width.toDouble(), 50.0, 0.0, 0.0, Colors.WHITE).xy(start.toInt(), (lastPlattform.y - plattformGap).toInt())
@@ -252,18 +260,15 @@ class Scene3() : Scene() {
                 (lastPlattform.x + player.radius * 2 > newPlattform.x) &&
                 (lastPlattform.x + lastPlattform.scaledWidth - player.radius * 2 < newPlattform.x + newPlattform.scaledWidth)
         )
+        //calculate TreasureChest
+        if (Random.nextInt(4) == 1) {
+            launchImmediately {
+                val bitmap: Bitmap = resourcesVfs["chest_white.png"].readBitmap()
+                val image = mainContainer.image(bitmap).scale(0.4).position((Random.nextInt(width.toInt() - 50) + start).toInt(), (lastPlattform.y - plattformGap - 195).toInt())
+                treasureObjects.add(image)
+            }
+        }
         return newPlattform
-    }
-
-    private suspend fun createTreasureObjects(): MutableList<Image> {
-        val bitmap: Bitmap = resourcesVfs["chest_white.png"].readBitmap()
-        val image1 = mainContainer.image(bitmap).scale(0.4).position(52, 705)
-        val image2 = mainContainer.image(bitmap).scale(0.4).position(450, 55)
-        val image3 = mainContainer.image(bitmap).scale(0.4).position(5, -795)
-        val image4 = mainContainer.image(bitmap).scale(0.4).position(65, -1895)
-
-
-        return mutableListOf(image1, image2, image3, image4)
     }
 
     private fun updateShapePositions() {
