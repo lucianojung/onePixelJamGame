@@ -13,13 +13,7 @@ import com.soywiz.korma.geom.sin
 
 class Scene1() : Scene() {
     override suspend fun Container.sceneInit() {
-        val circle = circle(100.0, Colors.WHITE).xy(156, 600)
 
-        circle.onClick {
-            sceneContainer.changeTo<Scene2>()
-        }
-
-        roundRect(400.0, 50.0, 5.0, 5.0, Colors.BLACK, Colors.WHITE, 4.0, true).xy(60, 800)
 
         val font = BitmapFont(
                 DefaultTtfFont, 128.0,
@@ -38,6 +32,21 @@ class Scene1() : Scene() {
             advance(advance)
         }).position(15, 300)
 
-        text("Luciano Jung & Maria Lorenz", font = font, textSize = 24.0, alignment = TextAlignment.BASELINE_LEFT).position(115,830)
+        text("challenge", font = font, textSize = 48.0, alignment = TextAlignment.MIDDLE_RIGHT).position(256,500)
+        text("endless", font = font, textSize = 48.0, alignment = TextAlignment.MIDDLE_LEFT).position(256,580)
+
+        val challengeCircle = circle(25.0, Colors.WHITE).xy(410, 500)
+        challengeCircle.onClick {
+            sceneContainer.changeTo<Scene2>()
+        }
+        val endlessCircle = circle(25.0, Colors.WHITE).xy(60, 580)
+        endlessCircle.onClick {
+            sceneContainer.changeTo<Scene3>()
+        }
+
+        roundRect(400.0, 100.0, 5.0, 5.0, Colors.TRANSPARENT_BLACK, Colors.WHITE, 4.0, true).xy(60, 800)
+        text("Made by", font = font, textSize = 20.0, alignment = TextAlignment.TOP_CENTER).position(256,810)
+        text("Luciano Jung & Maria Lorenz", font = font, textSize = 24.0, alignment = TextAlignment.TOP_CENTER).position(256,830)
+
     }
 }

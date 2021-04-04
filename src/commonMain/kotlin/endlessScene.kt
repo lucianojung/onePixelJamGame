@@ -1,12 +1,7 @@
 import com.soywiz.klock.Frequency
-import com.soywiz.klock.TimeSpan
-import com.soywiz.klock.milliseconds
-import com.soywiz.korau.sound.PlaybackTimes
-import com.soywiz.korau.sound.Sound
 import com.soywiz.korau.sound.readSound
 import com.soywiz.korge.input.onClick
 import com.soywiz.korge.scene.Scene
-import com.soywiz.korge.scene.delay
 import com.soywiz.korge.view.*
 import com.soywiz.korim.bitmap.Bitmap
 import com.soywiz.korim.color.Colors
@@ -16,20 +11,17 @@ import com.soywiz.korim.format.readBitmap
 import com.soywiz.korim.text.TextAlignment
 import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korio.file.std.resourcesVfs
-import com.soywiz.korio.lang.Thread_sleep
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.channelFlow
 import kotlin.math.min
 import kotlin.random.Random
 
-class Scene2() : Scene() {
+class Scene3() : Scene() {
 
     private var jumpIntensity = 4.0
-    private var multiplikator = 1.0
-    private var multiplikator2 = 1.0
     private var moveIntensity = 2.0
     private var maxSpeed = 8.0
     private var gravity = 0.05
+    private val plattformGap = 150
+    private var currentHeight = 900
 
     private var pixeldepth = 0.0
     private var powerUpTime = 300
@@ -50,18 +42,29 @@ class Scene2() : Scene() {
         // making ground objects
         // size = 512 x 1028
         groundObjects = createGroundObjects()
+        groundObjects[0].addUpdater {
+            for (i in 1 until groundObjects.size) {
+                if (groundObjects[i].y > 1000) {
+                    var index = (i - 1 + groundObjects.size) % groundObjects.size
+                    if (index == 0)
+                        index = groundObjects.size - 1
+                    groundObjects[i].removeFromParent()
+                    groundObjects[i] = nextPlattform(groundObjects[index])
+                }
+            }
+        }
+
         treasureObjects = createTreasureObjects()
 
         initPlayer()
 
-
         //walls and player control area
-       roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(0, 0)
-       roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(502, 0)
+        roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(0, 0)
+        roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(502, 0)
 
         roundRect(1000.0, 200.0, 0.0, 0.0, Colors["#000000"], Colors["#000000"], 0.0, true).xy(0, 949)
-        val buttonLeft = roundRect(150.0, 70.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#000000"], 4.0, true).xy(256, 980)
-        val buttonRight = roundRect(150.0, 70.0, 0.0, 0.0, Colors["#000000"], Colors["#FFFFFF"], 4.0, true).xy(106, 980)
+        val buttonLeft = roundRect(150.0, 50.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#000000"], 4.0, true).xy(256, 1000)
+        val buttonRight = roundRect(150.0, 50.0, 0.0, 0.0, Colors["#000000"], Colors["#FFFFFF"], 4.0, true).xy(106, 1000)
 
         buttonRight.onClick {
             changeButtonColor(leftWalk, buttonRight, buttonLeft)
@@ -100,7 +103,7 @@ class Scene2() : Scene() {
             }
 
             //PowerUp Handling
-            if (powerUpActive){
+            if (powerUpActive) {
                 powerUpTime--
             }
             if (powerUpTime <= 0) {
@@ -111,7 +114,7 @@ class Scene2() : Scene() {
 
             //check Collission
             val collission = collidingGround()
-            if (collission != 0.0) {
+            if (collission != 0) {
                 vertical = collission * jumpIntensity
             }
             //check for powerup collection
@@ -151,7 +154,7 @@ class Scene2() : Scene() {
 
         restartButton.onClick {
             playerIsAlive = true
-            sceneContainer.changeTo<Scene2>()
+            sceneContainer.changeTo<Scene3>()
         }
 
         val font = BitmapFont(
@@ -159,68 +162,50 @@ class Scene2() : Scene() {
                 paint = Colors.WHITE,
         )
         mainContainer.text("Game Over!", font = font, textSize = 64.0, alignment = TextAlignment.CENTER).position(256, 300)
-        mainContainer.text("Pixelheight reached: " + (-1 * (pixeldepth + 1048 - player.y)).toInt().toString() , font = font, textSize = 32.0, alignment = TextAlignment.CENTER).position(256, 400)
+        mainContainer.text("Pixelheight reached: " + (-1 * (pixeldepth + 1048 - player.y)).toInt().toString(), font = font, textSize = 32.0, alignment = TextAlignment.CENTER).position(256, 400)
     }
 
     private fun activateRandomPowerUp() {
-        val powerUpNumber = (Random.nextDouble() * 7).toInt()
+        val powerUpNumber = (Random.nextInt(6))
         when (powerUpNumber) {
             1 -> {
                 infotext.setText("Gravity decreased")
                 gravity -= 0.005
-
             }
             2 -> {
                 infotext.setText("Gravity increased")
                 gravity += 0.02
-
             }
             3 -> {
                 infotext.setText("Sideway move speed increased")
-                moveIntensity += 0.75
-
+                moveIntensity += 0.5
             }
             4 -> {
                 infotext.setText("Sideway move speed decreased")
                 moveIntensity -= 0.5
-
             }
             5 -> {
                 infotext.setText("Jumping Intensity decreased")
                 jumpIntensity -= 0.5
-
             }
             6 -> {
                 infotext.setText("Gravity inverted")
                 gravity = -0.05
-
-            }
-            7 -> {
-                infotext.setText("color invert")
-                //todo farben invertieren
-
             }
             else -> {
                 infotext.setText("Jumping Intensity increased")
-                jumpIntensity += 1.0
-
+                jumpIntensity += 0.5
             }
         }
         powerUpActive = true
         powerUpTime = 300
-
     }
 
     private fun deleteAllPowerUps() {
-        multiplikator += 0.0005
-        multiplikator2 += 0.00005
-
-        jumpIntensity = 4.0 * multiplikator
-        moveIntensity = 2.0 * multiplikator
-        maxSpeed = 8.0 * multiplikator
+        jumpIntensity = 4.0
+        moveIntensity = 2.0
+        maxSpeed = 8.0
         gravity = 0.05
-
-
     }
 
     private fun changeButtonColor(bool: Boolean, rect: RoundRect, rect2: RoundRect) {
@@ -239,68 +224,46 @@ class Scene2() : Scene() {
 
     private fun createGroundObjects(): MutableList<ShapeView> {
         val baseground = mainContainer.roundRect(1000.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(0, 900)
-        val ground1 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(0, 750)
-        val ground2 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 200, 650)
-        val ground3 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 350, 500)
-        val ground4 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 250, 300)
-        val ground5 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, 400)
-        val ground6 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -250, 50)
-        val ground7 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, 150)
-        val ground8 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -400, -100)
-        val ground9 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -150, 100)
 
-        val ground10 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -512, -350)
-        val ground11 = mainContainer.roundRect(80.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 80, -500)
-        val ground12 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 150, -200)
-        val ground13 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -400, -600)
-        val ground14 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 100, -750)
-        val ground15 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -512, -750)
-        val ground16 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -850)
-        val ground17 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -150, -1000)
-        val ground18 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -1150)
-        val ground19 = mainContainer.roundRect(200.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 200, -1350)
-        val ground20 = mainContainer.roundRect(230.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -350, -1300)
+        var ground0 = nextPlattform(baseground)
+        var ground1 = nextPlattform(ground0)
+        val ground2 = nextPlattform(ground1)
+        val ground3 = nextPlattform(ground2)
+        val ground4 = nextPlattform(ground3)
+        val ground5 = nextPlattform(ground4)
+        val ground6 = nextPlattform(ground5)
+        val ground7 = nextPlattform(ground6)
+        val ground8 = nextPlattform(ground7)
+        val ground9 = nextPlattform(ground8)
 
-        val ground21 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 100, -1500)
-        val ground22 = mainContainer.roundRect(80.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 80, -1650)
-        val ground23 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 50, -1800)
-        val ground24 = mainContainer.roundRect(80.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 450, -1850)
-        val ground25 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 50, -1950)
-        val ground26 = mainContainer.roundRect(300.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -2100)
-        val ground27 = mainContainer.roundRect(100.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 200, -2250)
-        val ground28 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 -50, -2400)
-        val ground29 = mainContainer.roundRect(350.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -2550)
-        val ground30 = mainContainer.roundRect(425.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 425, -2650)
-
-        val ground31 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 50, -2750)
-        val ground32 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+150, -2750)
-        val ground33 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2800)
-        val ground34 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2850)
-        val ground35 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2900)
-        val ground36 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+150, -2950)
-        val ground37 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+200, -3000)
-        val ground38 = mainContainer.roundRect(512.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -3400)
-
-
-
-
-        return mutableListOf(baseground, ground1, ground2,ground3,ground4,ground5, ground6, ground7,
-                ground8,ground9,ground10,ground11,ground12,ground13,ground14,ground15,ground16,ground17,
-                ground18,ground19,ground20,ground21,ground22,ground23,ground24,ground25,ground26,ground27,
-                ground28,ground29,ground30,ground31,ground32,ground33,ground34,ground35,ground36,ground37,
-                ground38)
+        return mutableListOf(baseground, ground0, ground1, ground2, ground3, ground4, ground5, ground6, ground7, ground8, ground9)
     }
 
+    private fun nextPlattform(lastPlattform: ShapeView): ShapeView {
+        var newPlattform = ShapeView()
+
+        do {
+            val start = Random.nextDouble(462.0)
+            val width = min(Random.nextDouble(350.0) + 50, 462 - start).toInt()
+
+            newPlattform.removeFromParent()
+            newPlattform = mainContainer.roundRect(width.toDouble(), 50.0, 0.0, 0.0, Colors.WHITE).xy(start.toInt(), (lastPlattform.y - plattformGap).toInt())
+        } while (
+                (lastPlattform.x + player.radius * 2 > newPlattform.x) &&
+                (lastPlattform.x + lastPlattform.scaledWidth - player.radius * 2 < newPlattform.x + newPlattform.scaledWidth)
+        )
+        return newPlattform
+    }
 
     private suspend fun createTreasureObjects(): MutableList<Image> {
         val bitmap: Bitmap = resourcesVfs["chest_white.png"].readBitmap()
-        val bitmap2: Bitmap = resourcesVfs["goal_white.png"].readBitmap()
         val image1 = mainContainer.image(bitmap).scale(0.4).position(52, 705)
         val image2 = mainContainer.image(bitmap).scale(0.4).position(450, 55)
         val image3 = mainContainer.image(bitmap).scale(0.4).position(5, -795)
         val image4 = mainContainer.image(bitmap).scale(0.4).position(65, -1895)
-        val image5 = mainContainer.image(bitmap2).scale(0.4).position(200, -3045)
-        return mutableListOf(image1,image2,image3,image4,image5)
+
+
+        return mutableListOf(image1, image2, image3, image4)
     }
 
     private fun updateShapePositions() {
@@ -327,31 +290,16 @@ class Scene2() : Scene() {
         return false
     }
 
-    private fun collidingGround(): Double {
+    private fun collidingGround(): Int {
         groundObjects.forEach { shape ->
             if (player.collidesWith(shape)) {
-                if (player.y + player.radius < shape.y &&
-                        player.x + player.radius > shape.x &&
-                        player.x < shape.x + shape.scaledWidth) { //shaut ob oben
+                if (player.y < shape.y) {
                     //playBounceSound()
-                    return 1.0
-                }
-                else if(player.y < shape.y + shape.scaledHeight &&
-                        player.x + player.radius > shape.x &&
-                        player.x < shape.x + shape.scaledWidth) { //shaut ob unten
-                    return -0.25
-                }
-                else if (player.x + player.radius < shape.x + shape.scaledWidth/2) { //shaut ob links
-                    leftWalk = true
-                    return 0.0
-                }
-                else if(player.x > shape.x + shape.scaledWidth/2) { //shaut ob rechts
-                    leftWalk = false
-                    return 0.0
-                }
-
+                    return 1
+                } else
+                    return -1
             }
         }
-        return 0.0
+        return 0
     }
 }

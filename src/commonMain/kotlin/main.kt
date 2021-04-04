@@ -18,5 +18,6 @@ object ConfigModule : Module() {
     override suspend fun AsyncInjector.configure() {
         mapPrototype { Scene1() }
         mapPrototype { Scene2() }
+        mapPrototype { Scene3() }
     }
 }
