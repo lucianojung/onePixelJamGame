@@ -73,12 +73,12 @@ class Scene3() : Scene() {
         val buttonRight = roundRect(150.0, 50.0, 0.0, 0.0, Colors["#000000"], Colors["#FFFFFF"], 4.0, true).xy(106, 1000)
 
         buttonRight.onClick {
-            changeButtonColor(leftWalk, buttonRight, buttonLeft)
+            changeButtonColor(buttonRight, buttonLeft)
             leftWalk = !leftWalk
         }
 
         buttonLeft.onClick {
-            changeButtonColor(leftWalk, buttonRight, buttonLeft)
+            changeButtonColor(buttonRight, buttonLeft)
             leftWalk = !leftWalk
         }
 
@@ -214,8 +214,8 @@ class Scene3() : Scene() {
         gravity = 0.05
     }
 
-    private fun changeButtonColor(bool: Boolean, rect: RoundRect, rect2: RoundRect) {
-        if (bool) {
+    private fun changeButtonColor(rect: RoundRect, rect2: RoundRect) {
+        if (rect.fill == Colors["#000000"]) {
             rect.fill = Colors["#FFFFFF"]
             rect.stroke = Colors["#000000"]
             rect2.fill = Colors["#000000"]
@@ -246,25 +246,25 @@ class Scene3() : Scene() {
     }
 
     private fun nextPlattform(lastPlattform: ShapeView): ShapeView {
-        var start = 0.0
-        var width = 0.0
         var newPlattform = ShapeView()
 
         do {
-            start = Random.nextDouble(462.0)
-            width = min(Random.nextDouble(350.0) + 50, 462 - start)
+            val start = Random.nextDouble(462.0)
+            val width = min(Random.nextDouble(350.0) + 50, 462 - start)
 
             newPlattform.removeFromParent()
             newPlattform = mainContainer.roundRect(width.toDouble(), 50.0, 0.0, 0.0, Colors.WHITE).xy(start.toInt(), (lastPlattform.y - plattformGap).toInt())
         } while (
                 (lastPlattform.x + player.radius * 2 > newPlattform.x) &&
-                (lastPlattform.x + lastPlattform.scaledWidth - player.radius * 2 < newPlattform.x + newPlattform.scaledWidth)
+                (lastPlattform.x + lastPlattform.scaledWidth - player.radius * 2 < newPlattform.x + newPlattform.scaledWidth) &&
+                (lastPlattform.x - newPlattform.x - newPlattform.scaledWidth < 300 ) &&
+                (newPlattform.x - lastPlattform.x - lastPlattform.scaledWidth < 300 )
         )
         //calculate TreasureChest
-        if (Random.nextInt(4) == 1) {
+        if (Random.nextInt(5) == 0) {
             launchImmediately {
                 val bitmap: Bitmap = resourcesVfs["chest_white.png"].readBitmap()
-                val image = mainContainer.image(bitmap).scale(0.4).position((Random.nextInt(width.toInt() - 50) + start).toInt(), (lastPlattform.y - plattformGap - 195).toInt())
+                val image = mainContainer.image(bitmap).scale(0.4).position(Random.nextInt(newPlattform.width.toInt()) + newPlattform.x.toInt(), (lastPlattform.y - plattformGap - 45).toInt())
                 treasureObjects.add(image)
             }
         }
