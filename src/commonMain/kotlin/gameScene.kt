@@ -279,9 +279,9 @@ class Scene2() : Scene() {
 
         val ground31 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 50, -2750)
         val ground32 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+150, -2750)
-        val ground33 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2800)
-        val ground34 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2850)
-        val ground35 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2900)
+        val ground33 = mainContainer.roundRect(250.0, 150.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2900)
+       // val ground34 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2850)
+        //val ground35 = mainContainer.roundRect(250.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+100, -2900)
         val ground36 = mainContainer.roundRect(150.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+150, -2950)
         val ground37 = mainContainer.roundRect(50.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512+200, -3000)
         val ground38 = mainContainer.roundRect(512.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(512 - 512, -3400)
@@ -292,7 +292,7 @@ class Scene2() : Scene() {
         return mutableListOf(baseground, ground1, ground2,ground3,ground4,ground5, ground6, ground7,
                 ground8,ground9,ground10,ground11,ground12,ground13,ground14,ground15,ground16,ground17,
                 ground18,ground19,ground20,ground21,ground22,ground23,ground24,ground25,ground26,ground27,
-                ground28,ground29,ground30,ground31,ground32,ground33,ground34,ground35,ground36,ground37,
+                ground28,ground29,ground30,ground31,ground32,ground33,ground36,ground37,
                 ground38)
     }
 
