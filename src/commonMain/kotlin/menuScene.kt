@@ -26,14 +26,22 @@ class Scene1() : Scene() {
         var offset = 0.degrees
         addFixedUpdater(60.timesPerSecond) { offset += 10.degrees }
         var version = 0
-        text("1BIT JAM", font = font, textSize = 128.0, alignment = TextAlignment.BASELINE_LEFT, renderer = CreateStringTextRenderer({ version++ }) { text, n, c, c1, g, advance ->
+        text("1Pixel", font = font, textSize = 128.0, alignment = TextAlignment.BASELINE_LEFT, renderer = CreateStringTextRenderer({ version++ }) { text, n, c, c1, g, advance ->
             transform.identity()
             val sin = sin(offset + (n * 360 / text.length).degrees)
             transform.translate(0.0, sin * 8)
             transform.scale(1.0, 1.0 + sin * 0.1)
             put(c)
             advance(advance)
-        }).position(20, 300)
+        }).position(130, 250)
+        text("JAM", font = font, textSize = 128.0, alignment = TextAlignment.BASELINE_LEFT, renderer = CreateStringTextRenderer({ version++ }) { text, n, c, c1, g, advance ->
+            transform.identity()
+            val sin = sin(offset + (n * 360 / text.length).degrees)
+            transform.translate(0.0, sin * 8)
+            transform.scale(1.0, 1.0 + sin * 0.1)
+            put(c)
+            advance(advance)
+        }).position(150, 350)
 
 
         text("trial", font = font, textSize = 48.0, alignment = TextAlignment.MIDDLE_RIGHT).position(210,500)
