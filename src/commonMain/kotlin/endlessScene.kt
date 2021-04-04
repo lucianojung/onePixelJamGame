@@ -4,6 +4,7 @@ import com.soywiz.korge.input.onClick
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.view.*
 import com.soywiz.korim.bitmap.Bitmap
+import com.soywiz.korim.color.ColorTransform
 import com.soywiz.korim.color.Colors
 import com.soywiz.korim.font.BitmapFont
 import com.soywiz.korim.font.DefaultTtfFont
@@ -249,7 +250,7 @@ class Scene3() : Scene() {
         var newPlattform = ShapeView()
 
         do {
-            val start = Random.nextDouble(462.0)
+            val start = Random.nextDouble(462.0) + 20
             val width = min(Random.nextDouble(350.0) + 50, 462 - start)
 
             newPlattform.removeFromParent()
@@ -257,8 +258,8 @@ class Scene3() : Scene() {
         } while (
                 (lastPlattform.x + player.radius * 2 > newPlattform.x) &&
                 (lastPlattform.x + lastPlattform.scaledWidth - player.radius * 2 < newPlattform.x + newPlattform.scaledWidth) &&
-                (lastPlattform.x - newPlattform.x - newPlattform.scaledWidth < 300 ) &&
-                (newPlattform.x - lastPlattform.x - lastPlattform.scaledWidth < 300 )
+                (lastPlattform.x - newPlattform.x - newPlattform.scaledWidth < 250 ) &&
+                (newPlattform.x - lastPlattform.x - lastPlattform.scaledWidth < 250 )
         )
         //calculate TreasureChest
         if (Random.nextInt(5) == 0) {
@@ -266,8 +267,10 @@ class Scene3() : Scene() {
                 val bitmap: Bitmap = resourcesVfs["chest_white.png"].readBitmap()
                 val image = mainContainer.image(bitmap).scale(0.4).position(Random.nextInt(newPlattform.width.toInt()) + newPlattform.x.toInt(), (lastPlattform.y - plattformGap - 45).toInt())
                 treasureObjects.add(image)
+                mainContainer.sendChildToBack(image)
             }
         }
+        mainContainer.sendChildToBack(newPlattform)
         return newPlattform
     }
 

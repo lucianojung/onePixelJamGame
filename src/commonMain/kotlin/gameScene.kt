@@ -1,6 +1,7 @@
 import com.soywiz.klock.Frequency
 import com.soywiz.klock.TimeSpan
 import com.soywiz.klock.milliseconds
+import com.soywiz.klock.seconds
 import com.soywiz.korau.sound.PlaybackTimes
 import com.soywiz.korau.sound.Sound
 import com.soywiz.korau.sound.readSound
@@ -204,8 +205,20 @@ class Scene2() : Scene() {
             }
             7 -> {
                 infotext.setText("color invert")
-                //todo farben invertieren
-
+                groundObjects.forEach { shape ->
+                    shape.fill = Colors["#000000"]
+                }
+                var rect = mainContainer.solidRect(512, 1080, Colors.WHITE)
+                mainContainer.sendChildToBack(rect)
+                player.fill = Colors.BLACK
+                launchImmediately{
+                    delay(5.seconds)
+                    rect.removeFromParent()
+                    groundObjects.forEach { shape ->
+                        shape.fill = Colors["#FFFFFF"]
+                    }
+                    player.fill = Colors.WHITE
+                }
             }
             else -> {
                 infotext.setText("Jumping Intensity increased")
