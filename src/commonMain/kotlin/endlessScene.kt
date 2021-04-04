@@ -32,6 +32,7 @@ class Scene3() : Scene() {
     private var pixeldepth = 0.0
     private var powerUpTime = 300
     private var powerUpActive: Boolean = false
+    private var soundPlaying: Boolean = false
 
     private var leftWalk = false
     private var playerIsAlive = true
@@ -155,7 +156,12 @@ class Scene3() : Scene() {
 
     private fun playBounceSound() {
         launchImmediately {
-            resourcesVfs["Jump.mp3"].readSound().playAndWait()
+            soundPlaying = true
+            var sound = resourcesVfs["bounce.mp3"].readSound()
+            sound.volume = 2000.0
+            sound.play()
+            delay(sound.length)
+            soundPlaying = false
         }
     }
 
@@ -333,8 +339,10 @@ class Scene3() : Scene() {
     private fun collidingGround(): Int {
         groundObjects.forEach { shape ->
             if (player.collidesWith(shape)) {
+                if (!soundPlaying && playerIsAlive) {
+                    playBounceSound()
+                }
                 if (player.y < shape.y) {
-                    //playBounceSound()
                     return 1
                 } else
                     return -1
