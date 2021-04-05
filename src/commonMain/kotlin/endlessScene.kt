@@ -6,7 +6,6 @@ import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.scene.delay
 import com.soywiz.korge.view.*
 import com.soywiz.korim.bitmap.Bitmap
-import com.soywiz.korim.color.ColorTransform
 import com.soywiz.korim.color.Colors
 import com.soywiz.korim.font.BitmapFont
 import com.soywiz.korim.font.DefaultTtfFont
@@ -14,6 +13,7 @@ import com.soywiz.korim.format.readBitmap
 import com.soywiz.korim.text.TextAlignment
 import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korio.file.std.resourcesVfs
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
@@ -27,7 +27,6 @@ class Scene3() : Scene() {
     private var maxSpeed = 9.0
     private var gravity = 0.05
     private val plattformGap = 150
-    private var currentHeight = 900
 
     private var pixeldepth = 0.0
     private var powerUpTime = 300
@@ -39,7 +38,7 @@ class Scene3() : Scene() {
 
     private var mainContainer: Container = Container()
     private var player: Circle = Circle()
-    private var groundObjects: MutableList<ShapeView> = mutableListOf()
+    private var groundObjects: MutableList<SolidRect> = mutableListOf()
     private var treasureObjects: MutableList<Image> = mutableListOf()
     private var infotext: Text = Text("")
 
@@ -157,7 +156,7 @@ class Scene3() : Scene() {
     private fun playBounceSound() {
         launchImmediately {
             soundPlaying = true
-            var sound = resourcesVfs["bounce.mp3"].readSound()
+            val sound = resourcesVfs["bounce.mp3"].readSound()
             sound.volume = 2000.0
             sound.play()
             delay(sound.length)
@@ -172,7 +171,7 @@ class Scene3() : Scene() {
 
         restartButton.onClick {
             playerIsAlive = true
-            sceneContainer.changeTo<Scene3>()
+            sceneContainer.changeTo<Scene1>()
         }
 
         val font = BitmapFont(
@@ -213,16 +212,16 @@ class Scene3() : Scene() {
             7 -> {
                 infotext.setText("color invert")
                 groundObjects.forEach { shape ->
-                    shape.fill = Colors["#000000"]
+                    shape.color = Colors["#000000"]
                 }
-                var rect = mainContainer.solidRect(512, 1080, Colors.WHITE)
+                val rect = mainContainer.solidRect(512, 1080, Colors.WHITE)
                 mainContainer.sendChildToBack(rect)
                 player.fill = Colors.BLACK
-                launchImmediately{
+                launchImmediately {
                     delay(5.seconds)
                     rect.removeFromParent()
                     groundObjects.forEach { shape ->
-                        shape.fill = Colors["#FFFFFF"]
+                        shape.color = Colors["#FFFFFF"]
                     }
                     player.fill = Colors.WHITE
                 }
@@ -267,11 +266,11 @@ class Scene3() : Scene() {
         }
     }
 
-    private fun createGroundObjects(): MutableList<ShapeView> {
-        val baseground = mainContainer.roundRect(1000.0, 50.0, 0.0, 0.0, Colors.WHITE).xy(0, 900)
+    private fun createGroundObjects(): MutableList<SolidRect> {
+        val baseground = mainContainer.solidRect(1000.0, 50.0, Colors.WHITE).xy(0, 900)
 
-        var ground0 = nextPlattform(baseground)
-        var ground1 = nextPlattform(ground0)
+        val ground0 = nextPlattform(SolidRect(0.0, 50.0).xy(256, 900))
+        val ground1 = nextPlattform(ground0)
         val ground2 = nextPlattform(ground1)
         val ground3 = nextPlattform(ground2)
         val ground4 = nextPlattform(ground3)
@@ -284,26 +283,24 @@ class Scene3() : Scene() {
         return mutableListOf(baseground, ground0, ground1, ground2, ground3, ground4, ground5, ground6, ground7, ground8, ground9)
     }
 
-    private fun nextPlattform(lastPlattform: ShapeView): ShapeView {
-        var newPlattform = ShapeView()
+    private fun nextPlattform(lastPlattform: SolidRect): SolidRect {
+        var newPlattform = SolidRect(0, 0)
 
         do {
-            val start = Random.nextDouble(462.0) + 20
-            val width = min(Random.nextDouble(350.0) + 50, 442 - start)
+            val start: Double = Random.nextDouble(412.0)
+            val width: Double = min(Random.nextDouble(412.0) + 100, 512 - start)
 
             newPlattform.removeFromParent()
-            newPlattform = mainContainer.roundRect(width.toDouble(), 50.0, 0.0, 0.0, Colors.WHITE).xy(start.toInt(), (lastPlattform.y - plattformGap).toInt())
+            newPlattform = mainContainer.solidRect(width, 50.0, Colors.WHITE).xy(start.toInt(), (lastPlattform.y - plattformGap).toInt())
         } while (
-                (lastPlattform.x + player.radius * 2 > newPlattform.x) &&
-                (lastPlattform.x + lastPlattform.scaledWidth - player.radius * 2 < newPlattform.x + newPlattform.scaledWidth) &&
-                (lastPlattform.x - newPlattform.x - newPlattform.scaledWidth < 250 ) &&
-                (newPlattform.x - lastPlattform.x - lastPlattform.scaledWidth < 250 )
+                !(newPlattform.x - lastPlattform.x > 0 && newPlattform.x > 80) &&
+                !((lastPlattform.x + lastPlattform.width) - (newPlattform.x + newPlattform.width) > 0 && newPlattform.x + newPlattform.width < 432)
         )
         //calculate TreasureChest
         if (Random.nextInt(5) == 0) {
             launchImmediately {
                 val bitmap: Bitmap = resourcesVfs["chest_white.png"].readBitmap()
-                val image = mainContainer.image(bitmap).scale(0.4).position(Random.nextInt(newPlattform.width.toInt()) + newPlattform.x.toInt(), (lastPlattform.y - plattformGap - 45).toInt())
+                val image = mainContainer.image(bitmap).scale(0.4).position(Random.nextInt(max(newPlattform.width, 1.0).toInt()) + newPlattform.x.toInt(), (lastPlattform.y - plattformGap - 45).toInt())
                 treasureObjects.add(image)
                 mainContainer.sendChildToBack(image)
             }

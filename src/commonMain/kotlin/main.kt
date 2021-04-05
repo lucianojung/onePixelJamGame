@@ -2,7 +2,6 @@ import com.soywiz.korge.*
 import com.soywiz.korge.scene.Module
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korim.color.*
-import com.soywiz.korim.vector.SizedDrawable
 import com.soywiz.korinject.AsyncInjector
 import com.soywiz.korma.geom.*
 import kotlin.reflect.KClass

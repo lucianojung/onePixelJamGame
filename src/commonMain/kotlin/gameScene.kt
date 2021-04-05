@@ -1,9 +1,5 @@
 import com.soywiz.klock.Frequency
-import com.soywiz.klock.TimeSpan
-import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
-import com.soywiz.korau.sound.PlaybackTimes
-import com.soywiz.korau.sound.Sound
 import com.soywiz.korau.sound.readSound
 import com.soywiz.korge.input.onClick
 import com.soywiz.korge.scene.Scene
@@ -17,9 +13,6 @@ import com.soywiz.korim.format.readBitmap
 import com.soywiz.korim.text.TextAlignment
 import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korio.file.std.resourcesVfs
-import com.soywiz.korio.lang.Thread_sleep
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.channelFlow
 import kotlin.math.min
 import kotlin.random.Random
 
@@ -157,7 +150,7 @@ class Scene2() : Scene() {
     private fun playBounceSound() {
         launchImmediately {
             soundPlaying = true
-            var sound = resourcesVfs["bounce.mp3"].readSound()
+            val sound = resourcesVfs["bounce.mp3"].readSound()
             sound.volume = 2000.0
             sound.play()
             delay(sound.length)
@@ -184,7 +177,7 @@ class Scene2() : Scene() {
     }
 
     private fun activateRandomPowerUp() {
-        val powerUpNumber = (Random.nextInt() * 8).toInt()
+        val powerUpNumber = (Random.nextInt() * 8)
         when (powerUpNumber) {
             1 -> {
                 infotext.setText("Gravity decreased")
@@ -221,7 +214,7 @@ class Scene2() : Scene() {
                 groundObjects.forEach { shape ->
                     shape.fill = Colors["#000000"]
                 }
-                var rect = mainContainer.solidRect(512, 1080, Colors.WHITE)
+                val rect = mainContainer.solidRect(512, 1080, Colors.WHITE)
                 mainContainer.sendChildToBack(rect)
                 player.fill = Colors.BLACK
                 launchImmediately{
