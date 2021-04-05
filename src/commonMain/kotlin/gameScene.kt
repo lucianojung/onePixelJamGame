@@ -54,7 +54,7 @@ class Scene2() : Scene() {
         val exitBitmap: Bitmap = resourcesVfs["exit.png"].readBitmap()
         val exitButton = image(exitBitmap).scale(0.01).position(28, 8)
         exitButton.onClick {
-            sceneContainer.changeTo<Scene1>()
+            sceneContainer.changeTo<Scene3>()
         }
 
         roundRect(452.0, 50.0, 5.0, 5.0, Colors.TRANSPARENT_BLACK).xy(60, 0)
