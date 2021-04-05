@@ -75,8 +75,8 @@ class Scene3() : Scene() {
         roundRect(10.0, 1080.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#FFFFFF"], 0.0, true).xy(502, 0)
 
         roundRect(1000.0, 200.0, 0.0, 0.0, Colors["#000000"], Colors["#000000"], 0.0, true).xy(0, 949)
-        val buttonLeft = roundRect(150.0, 70.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#000000"], 4.0, true).xy(256, 1000)
-        val buttonRight = roundRect(150.0, 70.0, 0.0, 0.0, Colors["#000000"], Colors["#FFFFFF"], 4.0, true).xy(106, 1000)
+        val buttonLeft = roundRect(150.0, 70.0, 0.0, 0.0, Colors["#FFFFFF"], Colors["#000000"], 4.0, true).xy(256, 980)
+        val buttonRight = roundRect(150.0, 70.0, 0.0, 0.0, Colors["#000000"], Colors["#FFFFFF"], 4.0, true).xy(106, 980)
 
         buttonRight.onClick {
             changeButtonColor(buttonRight, buttonLeft)
@@ -171,7 +171,7 @@ class Scene3() : Scene() {
 
         restartButton.onClick {
             playerIsAlive = true
-            sceneContainer.changeTo<Scene1>()
+            sceneContainer.changeTo<Scene3>()
         }
 
         val font = BitmapFont(
@@ -179,7 +179,7 @@ class Scene3() : Scene() {
                 paint = Colors.WHITE,
         )
         mainContainer.text("Game Over!", font = font, textSize = 64.0, alignment = TextAlignment.CENTER).position(256, 300)
-        mainContainer.text("Pixelheight reached: " + (-1 * (pixeldepth + 1048 - player.y)).toInt().toString(), font = font, textSize = 32.0, alignment = TextAlignment.CENTER).position(256, 400)
+        mainContainer.text("Pixel Highscore: " + (-1 * (pixeldepth + 1048 - player.y)).toInt().toString(), font = font, textSize = 32.0, alignment = TextAlignment.CENTER).position(256, 400)
     }
 
     private fun activateRandomPowerUp() {
@@ -194,15 +194,15 @@ class Scene3() : Scene() {
                 gravity += 0.02
             }
             3 -> {
-                infotext.setText("Sideway move speed increased")
+                infotext.setText("Sideway speed increased")
                 moveIntensity += 0.5
             }
             4 -> {
-                infotext.setText("Sideway move speed decreased")
+                infotext.setText("Sideway speed decreased")
                 moveIntensity -= 0.5
             }
             5 -> {
-                infotext.setText("Jumping Intensity decreased")
+                infotext.setText("Jumping decreased")
                 jumpIntensity -= 0.5
             }
             6 -> {
@@ -210,7 +210,7 @@ class Scene3() : Scene() {
                 gravity = -0.05
             }
             7 -> {
-                infotext.setText("color invert")
+                infotext.setText("Color invert")
                 groundObjects.forEach { shape ->
                     shape.color = Colors["#000000"]
                 }
